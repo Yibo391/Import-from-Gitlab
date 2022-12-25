@@ -1,6 +1,3 @@
-/* eslint-disable jsdoc/require-param-type */
-/* eslint-disable jsdoc/require-param-description */
-// Update the time display every second
 setInterval(updateTime, 1000)
 
 /**
@@ -49,28 +46,38 @@ document.querySelectorAll('.app').forEach((app) => {
     windowElement.appendChild(titleBar)
     // Append the window element to the app container
     document.getElementById('app-container').appendChild(windowElement)
-
-    // Add event listeners for the drag and drop functionality
     windowElement.addEventListener('dragstart', (event) => {
-      // Set the data that
-      event.dataTransfer.setData('text/plain', appId)
-    })
+      console.log('DRAG START', event)
 
-    windowElement.addEventListener('drag', (event) => {
-      // Update the position of the window element during the drag
-      windowElement.style.left = `${event.clientX - windowElement.offsetWidth / 2}px`
-      windowElement.style.top = `${event.clientY - windowElement.offsetHeight / 2}px`
-    })
-
-    windowElement.addEventListener('dragend', (event) => {
-      // Calculate the new position of the window element based on the mouse position
-      const newLeft = event.clientX - windowElement.offsetWidth / 2
-      // Check if the new position is within the bounds of the screen
-      if (newLeft > 0 && newLeft + windowElement.offsetWidth < window.innerWidth) {
-        // Update the position of the window element
-        windowElement.style.left = `${newLeft}px`
-        windowElement.style.top = '0px'
+      // Get original position
+      const style = window.getComputedStyle(event.target, null)
+      const startX = parseInt(style.getPropertyValue('left'), 10) - event.clientX
+      const startY = parseInt(style.getPropertyValue('top'), 10) - event.clientY
+      const start = {
+        posX: startX,
+        posY: startY
       }
+
+      // Save the position in the dataTransfer
+      event.dataTransfer.setData('application/json', JSON.stringify(start))
+      console.log('Start position', start)
+    })
+
+    window.addEventListener('dragover', (event) => {
+      event.preventDefault()
+    })
+
+    window.addEventListener('drop', (event) => {
+      // Get the position of the dragged
+
+      // Get the position of the dragged element and where the drop was
+      const start = JSON.parse(event.dataTransfer.getData('application/json'))
+      const dropX = event.clientX
+      const dropY = event.clientY
+
+      // Move element position from start to drop
+      windowElement.style.left = (dropX + start.posX) + 'px'
+      windowElement.style.top = (dropY + start.posY) + 'px'
     })
   })
 })
