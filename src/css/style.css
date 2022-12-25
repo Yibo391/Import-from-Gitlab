@@ -1,0 +1,83 @@
+#screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  height: 100%;
+  background-image: url();
+}
+
+
+#dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.app:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#time {
+  position: absolute;
+  right: 0px;;
+  bottom: 10px;
+}
+
+.screen-app {
+    background-color: aqua;
+}
+
+.window {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 400px;
+  height: 300px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.window .title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.window .title-bar button {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #444;
+  cursor: pointer;
+}
+
+.window .title-bar button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
