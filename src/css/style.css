@@ -5,7 +5,7 @@
   right: 0;
   bottom: 50px;
   height: 100%;
-  background-image: url();
+  background-image: url(/img/computer_kuan_201782_18.jpeg);
 }
 
 
@@ -80,4 +80,6 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-
+.selected {
+  z-index: 1;
+}
