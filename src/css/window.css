@@ -1,38 +1,44 @@
 #window {
   position: absolute;
   border: 1px solid black;
-  background-color: white;
+  background: #004172;
   width: 600px;
   height: 530px;
   z-index: 1;
   min-width: 150px;
   min-height: 120px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 #window #titlebar {
+  display: flex;
+  align-items: center;
   position: relative;
-  cursor: move;
   padding: 5px 10px;
   height: 20px;
-  background-color: grey;
-  color: #aaa;
+  background-color: #0078D7;
+  color: white;
   border-bottom: 1px solid #555;
+  cursor: default;
 }
 
 #window #titlebar.focused {
   color: white;
-  background-color: #888;
+  background-color: #0078D7;
 }
 
 #titlebar img {
   /* height: 15px; */
-  height: 90%
+  height: 90%;
+  align-items: center;
 }
 
 #titlebar #title {
   margin: 0;
   width: 100%;
   height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 }
 
 #titlebar #buttons {
@@ -58,10 +64,10 @@
 }
 
 #closeButton:hover {
-  background-color: red;
+  background-color: #f1707b;
 }
 
-#window > #content {
+#window>#content {
   height: calc(100% - 32px);
   box-sizing: border-box;
   /* border: 2px dashed grey; */

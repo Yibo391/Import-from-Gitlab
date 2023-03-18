@@ -1,17 +1,21 @@
 * {
   margin: 0;
-	user-select: none;
+  user-select: none;
 }
 
 #bottombar {
   position: fixed;
-  z-index: 2147483646;
+  z-index: 100;
   bottom: 0;
   height: 40px;
   width: 100%;
   padding: 5px;
-  border: 1px solid #555;
-  background-color: rgba(150, 150, 150, .75);
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: none;
+  border-bottom: none;
+  background-color: #0078D7;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .icon {
@@ -23,15 +27,21 @@
   opacity: .81;
   background-color: white;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-.icon:hover, .icon:focus {
+.icon:hover,
+.icon:focus {
   opacity: 1;
   animation: iconHover 0.3s forwards;
 }
 
-
 @keyframes iconHover {
-  from { transform: scale(1.0, 1.0); }
-  to { transform: scale(1.2, 1.2); }
+  from {
+    transform: scale(1.0, 1.0);
+  }
+
+  to {
+    transform: scale(1.2, 1.2);
+  }
 }

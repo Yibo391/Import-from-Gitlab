@@ -38,36 +38,60 @@ class PersonalWebDesktop extends window.HTMLElement {
   }
 
   connectedCallback () {
+    this._appendElements()
+    this._addBottombarEventListeners()
+    this._insertAppShortcuts()
+    this._addDocumentEventListeners()
+    this._addContextMenuPreventDefault()
+  }
+
+  _appendElements () {
     this.shadowRoot.appendChild(stylesheet.content)
     this.shadowRoot.appendChild(desktopSnippet)
     this.shadowRoot.appendChild(bottombarSnippet)
     this._desktop = this.shadowRoot.querySelector('#desktop')
     this._bottombar = this.shadowRoot.querySelector('#bottombar')
+  }
+
+  _addBottombarEventListeners () {
     this._bottombar.addEventListener('click', e => {
       if (e.target.classList.contains('icon')) {
-        this._openApplication(e.target)
+        this.openApplication(e.target)
       }
     })
 
     this._bottombar.addEventListener('keydown', e => {
       if (e.target.classList.contains('icon') && e.key === 'Enter') {
-        this._openApplication(e.target)
+        this.openApplication(e.target)
       }
     })
+  }
 
-    this._insertAppShortcut('memory-game', 'Memory')
-    this._insertAppShortcut('chat-app', 'Chat')
-    this._insertAppShortcut('calendar-app', 'Calendar')
+  _insertAppShortcuts () {
+    const shortcuts = [
+      { appName: 'memory-game', titleName: 'Memory' },
+      { appName: 'chat-app', titleName: 'Chat' },
+      { appName: 'calendar-app', titleName: 'Calendar' }
+    ]
+
+    shortcuts.forEach(shortcut => {
+      this._insertAppShortcut(shortcut.appName, shortcut.titleName)
+    })
+
     this._highestLayer = 1
+  }
 
+  _addDocumentEventListeners () {
     document.addEventListener('keydown', e => {
       if (e.key === 'F4' && e.shiftKey) {
-        this._closeFocusedWindow()
+        this.closeFocusedWindow()
       } else if (e.key === 'F11' && e.shiftKey) {
-        this._maximizeFocusedWindow()
+        this.maximizeWindow()
       }
     })
+  }
 
+  _addContextMenuPreventDefault () {
     window.addEventListener('contextmenu', e => {
       e.preventDefault()
     })
@@ -75,6 +99,7 @@ class PersonalWebDesktop extends window.HTMLElement {
 
   /**
    * Puts a shortcut icon in the bottombar that opens the application its tied to when clicked
+   *
    * @param {string} appName the folder that contains the app must be named this
    * @param {string} titleName What name to display in the title bar of the window
    */
@@ -89,9 +114,11 @@ class PersonalWebDesktop extends window.HTMLElement {
 
   /**
    * Opens the application in a window
+   *
    * @param {HTMLElement} shortcut the icon shortcut containing parameters for app, title, and iconUrl
+   * @param icon
    */
-  _openApplication (icon) {
+  openApplication (icon) {
     const appName = icon.getAttribute('id')
     const titleName = icon.getAttribute('title')
     const iconUrl = icon.getAttribute('src')
@@ -103,14 +130,14 @@ class PersonalWebDesktop extends window.HTMLElement {
     appWindow.setAttribute('nr', this._desktop.children.length)
     appWindow.setTitle(titleName)
     appWindow.setOffsetPosition((this._desktop.children.length - 1) * newWindowOffset)
-    this._selectWindow(appWindow, true)
-    appWindow.addEventListener('mousedown', () => this._selectWindow(appWindow, true))
+    this.setFocusedWindow(appWindow, true)
+    appWindow.addEventListener('mousedown', () => this.setFocusedWindow(appWindow, true))
   }
 
   /**
    * Closes the window that has focus
    */
-  _closeFocusedWindow () {
+  closeFocusedWindow () {
     if (!this._focusedWindow) {
       return
     }
@@ -126,13 +153,13 @@ class PersonalWebDesktop extends window.HTMLElement {
       }
     }
     if (newFocusWindow) {
-      this._selectWindow(newFocusWindow, false)
+      this.setFocusedWindow(newFocusWindow, false)
     } else {
       this._focusedWindow = undefined
     }
   }
 
-  _maximizeFocusedWindow () {
+  maximizeWindow () {
     if (!this._focusedWindow) {
       return
     }
@@ -142,10 +169,11 @@ class PersonalWebDesktop extends window.HTMLElement {
 
   /**
    * Puts focus on a specific window
+   *
    * @param {HTMLElement} appWindow
    * @param {boolean} increaseLayer
    */
-  _selectWindow (appWindow, increaseLayer) {
+  setFocusedWindow (appWindow, increaseLayer) {
     if (this._focusedWindow !== appWindow) {
       if (this._focusedWindow) {
         this._focusedWindow.unsetFocus()
