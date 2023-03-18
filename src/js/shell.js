@@ -40,7 +40,6 @@ class PersonalWebDesktop extends window.HTMLElement {
     this.appendE()
     this.addEvenLS()
     this._insertAppShortcuts()
-    this.addDocumentEvenLs()
   }
 
   appendE () {
