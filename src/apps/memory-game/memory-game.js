@@ -5,13 +5,11 @@ const appPath = 'apps/' + appName
 const imageFolder = appPath + '/images'
 
 const styleTemplate = document.createElement('template')
-const chooseSizeTemplate = document.createElement('template')
-const gameStatsSnippet = document.createElement('div')
-
 styleTemplate.innerHTML = `
   <link rel='stylesheet' href='${appPath}/css/memory-style.css'>
 `
 
+const chooseSizeTemplate = document.createElement('template')
 chooseSizeTemplate.innerHTML = `
   <form id='sizeForm'>
     Choose nr of cards: 
@@ -26,6 +24,7 @@ chooseSizeTemplate.innerHTML = `
   </form>
 `
 
+const gameStatsSnippet = document.createElement('div')
 gameStatsSnippet.innerHTML = `
   Time: <span id='clock'>0</span>
   <span class='right'> Nr of moves made:
@@ -45,6 +44,7 @@ class MemoryGame extends window.HTMLElement {
 
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.appendChild(styleTemplate.content.cloneNode(true))
+    this._blockKeyNavigation = false
   }
 
   connectedCallback () {
@@ -54,26 +54,28 @@ class MemoryGame extends window.HTMLElement {
     this.addEventListener('windowlostfocus', () => {
       this._disableKeyNavigation()
     })
-    this.gameSize()
+    this._chooseSize()
   }
 
-  restart () {
-    this.clear()
-    this.gameSize()
+  _resetGame () {
+    this._clearContent()
+    this._chooseSize()
   }
 
-  gameSize () {
+  _chooseSize () {
+    this._blockKeyNavigation = false
     this.shadowRoot.appendChild(chooseSizeTemplate.content.cloneNode(true))
     const form = this.shadowRoot.querySelector('#sizeForm')
     form.addEventListener('submit', e => {
       e.preventDefault()
       const size = parseInt(form.querySelector('#nrOfCards').value)
-      this.start(size)
+      this._startGame(size)
     })
   }
 
-  start (size) {
-    this.clear()
+  _startGame (size) {
+    this._blockKeyNavigation = true
+    this._clearContent()
 
     this._cards = [] // all cards
     this._openCards = [] // shown cards
@@ -83,12 +85,13 @@ class MemoryGame extends window.HTMLElement {
     this._clockInterval = undefined // clock interval
     this._movesCounter = undefined // where the nr of moves are shown
 
+    let rows
     this._cols = size > 6
       ? 4
       : size === 6
         ? 3
         : 2
-    const rows = size < 12
+    rows = size < 12
       ? 2
       : size === 16
         ? 4
@@ -99,13 +102,13 @@ class MemoryGame extends window.HTMLElement {
 
     for (let i = 1; i <= this._totalCards / 2; i++) {
       for (let j = 0; j < 2; j++) {
-        const card = this.createOne(i)
+        const card = this._createCard(i)
         this._cards.push(card)
       }
     }
 
     // shuffles cards and insert into game element with correct rows and columns
-    this.shuffle()
+    this._shuffleCards()
 
     const table = document.createElement('table')
     table.className = 'cards'
@@ -140,8 +143,36 @@ class MemoryGame extends window.HTMLElement {
   }
 
   /**
+   * Allows navigation with arrow keys and space bar
+   */
+  _enableKeyNavigation () {
+    const rowNavigationKeys = ['ArrowUp', '', 'ArrowDown']
+    const colNavigationKeys = ['ArrowLeft', '', 'ArrowRight']
+    document.addEventListener('keydown', this._listener = e => {
+      if (!this._blockKeyNavigation) {
+        return
+      }
+
+      if (rowNavigationKeys.includes(e.key)) {
+        const indexChange = (rowNavigationKeys.indexOf(e.key) - 1) * this._cols
+        this._selectCard(indexChange)
+      } else if (colNavigationKeys.includes(e.key)) {
+        const indexChange = colNavigationKeys.indexOf(e.key) - 1
+        this._selectCard(indexChange)
+      } else if (e.key === ' ') {
+        e.preventDefault()
+        const card = this._getSelectedCard().firstChild
+        this._interactWithCard(card)
+      }
+    })
+  }
+
+  _disableKeyNavigation () {
+    document.removeEventListener('keydown', this._listener)
+  }
+
+  /**
    * Used during key navigation
-   *
    * @param {number} indexChange how many array steps to take from the the previously selected card
    */
   _selectCard (indexChange) {
@@ -166,7 +197,6 @@ class MemoryGame extends window.HTMLElement {
 
   /**
    * Shows card if allowed
-   *
    * @param {HTMLElement} card
    */
   _interactWithCard (card) {
@@ -178,7 +208,7 @@ class MemoryGame extends window.HTMLElement {
       this._openCards.push(card)
       this._nrOfMoves++
       this._movesCounter.innerText = this._nrOfMoves
-      this.showOne(card)
+      this._showCard(card)
       if (this._openCards.length === 2) {
         if (this._openCards[0].id === this._openCards[1].id) {
           // shown cards match
@@ -188,10 +218,7 @@ class MemoryGame extends window.HTMLElement {
             clearInterval(this._clockInterval) // stops the clock
           }
           setTimeout(() => {
-            for (const card of this._openCards) {
-              this.removeOne(card)
-            }
-            this.isGameOver()
+            this._removeMatchedCards()
             this._openCards = []
             this._blockAction = false
           }, showCardsTimeout)
@@ -199,10 +226,7 @@ class MemoryGame extends window.HTMLElement {
           // shown cards do not match
           this._blockAction = true
           setTimeout(() => {
-            for (const card of this._openCards) {
-              this.hideOne(card)
-            }
-            this._openCards.length = 0
+            this._hideOpenCards()
             this._blockAction = false
           }, showCardsTimeout)
         }
@@ -213,9 +237,10 @@ class MemoryGame extends window.HTMLElement {
   /**
    * Ends the game and presents game over screen if all cards have been matched
    */
-  isGameOver () {
+  _checkIfGameIsOver () {
     if (this._isGameOver()) {
-      this.clear()
+      this._blockKeyNavigation = true
+      this._clearContent()
 
       const slowTime = Math.pow(this._totalCards, 1.5)
       const tooManyMovesLimit = this._totalCards * 2
@@ -233,12 +258,12 @@ class MemoryGame extends window.HTMLElement {
         `${this._timeTaken < slowTime ? 'Good job, you' : 'You weren\'t exactly quick, but you'} finished the game in ${totalTime} using ${this._nrOfMoves} moves${this._nrOfMoves < tooManyMovesLimit ? '!' : '. Getting senile?'}`
 
       this.shadowRoot.appendChild(resultPresentation.cloneNode(true))
-      this.gameSize()
+      this._chooseSize()
       this.shadowRoot.querySelector('button').innerText = 'Start new game'
     }
   }
 
-  clear () {
+  _clearContent () {
     while (this.shadowRoot.firstElementChild !== this.shadowRoot.lastElementChild) {
       this.shadowRoot.lastChild.remove()
     }
@@ -252,15 +277,15 @@ class MemoryGame extends window.HTMLElement {
    * Removes shown cards
    */
   _removeMatchedCards () {
-    for (const card of this._openCards) {
-      this.removeOne(card)
+    for (let card of this._openCards) {
+      this._removeCard(card)
     }
-    this.isGameOver()
+    this._checkIfGameIsOver()
   }
 
   _hideOpenCards () {
-    for (const card of this._openCards) {
-      this.hideOne(card)
+    for (let card of this._openCards) {
+      this._hideCard(card)
     }
     this._openCards.length = 0
   }
@@ -268,53 +293,49 @@ class MemoryGame extends window.HTMLElement {
   /**
    * Shuffles the this._cards array
    */
-  shuffle () {
-    let currentIndex = this._cards.length; let temporaryValue; let randomIndex
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex)
-      currentIndex -= 1
-      temporaryValue = this._cards[currentIndex]
+  _shuffleCards () {
+    for (let currentIndex = this._cards.length - 1; currentIndex > 0; currentIndex--) {
+      const randomIndex = Math.floor(Math.random() * (currentIndex + 1))
+      const temp = this._cards[currentIndex]
       this._cards[currentIndex] = this._cards[randomIndex]
-      this._cards[randomIndex] = temporaryValue
+      this._cards[randomIndex] = temp
     }
   }
 
-  createOne (id) {
+  _createCard (id) {
     const imagePath = imageFolder + '/' + 0 + '.png'
 
     const card = document.createElement('img')
     card.id = id
     card.className = 'card'
     card.setAttribute('src', imagePath)
-    this.setEnabled(card, true)
+    this._setCardEnabled(card, true)
 
     return card
   }
 
-  showOne (card) {
+  _showCard (card) {
     const image = imageFolder + '/' + card.id + '.png'
     card.setAttribute('src', image)
   }
 
-  hideOne (card) {
+  _hideCard (card) {
     const image = imageFolder + '/0.png'
     card.setAttribute('src', image)
   }
 
-  removeOne (card) {
+  _removeCard (card) {
     const image = imageFolder + '/empty.png'
     card.setAttribute('src', image)
-    this.setEnabled(card, false)
+    this._setCardEnabled(card, false)
   }
 
   /**
    * Decides if the card can be interacted with or not
-   *
    * @param {*} card
    * @param {boolean} enabled
    */
-  setEnabled (card, enabled) {
+  _setCardEnabled (card, enabled) {
     card.setAttribute('data-enabled', enabled)
   }
 }
