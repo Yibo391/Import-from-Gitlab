@@ -2,9 +2,7 @@
   width: 100%;
 }
 
-.selectedCard {
-  border: 2px solid red;
-}
+
 
 table.cards {
   /* width: 100%;

@@ -39,7 +39,7 @@ class CalendarApp extends window.HTMLElement {
     yearHeader.querySelector('#month').remove()
     yearHeader.querySelector('#yearTitle').innerText = this._currentYear
     this.shadowRoot.appendChild(yearHeader)
-    this._setNavigationEventListeners(yearHeader, Views.YearView)
+    this.naviListener(yearHeader, Views.YearView)
 
     // flex container
     const flexContainer = document.createElement('div')
@@ -74,7 +74,7 @@ class CalendarApp extends window.HTMLElement {
 
     header.querySelector('#yearTitle').innerText = year
     header.querySelector('#monthTitle').innerText = Template.monthsArr[month]
-    this._setNavigationEventListeners(header, Views.MonthView)
+    this.naviListener(header, Views.MonthView)
 
     // month and today link
     this.shadowRoot.appendChild(this._makeMonth(year, month))
@@ -90,41 +90,33 @@ class CalendarApp extends window.HTMLElement {
    * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
    */
   _makeMonth (year = this._currentYear, month = this._currentMonth, fullView = true) {
-    const daysLastMonth = new Date(year, month, 0).getDate()
-    const daysInMonth = new Date(year, month + 1, 0).getDate()
-    const firstWeekDayInMonth = new Date(year, month, 1).getUTCDay()
-    const weeksInMonth = (firstWeekDayInMonth + daysInMonth) / 7
-
     const table = document.createElement('table')
     table.id = fullView ? 'fullView' : 'miniView'
 
     if (fullView) {
       const weekdaysRow = document.createElement('tr')
       table.appendChild(weekdaysRow)
-      for (let weekday = 0; weekday < 7; weekday++) {
+      Template.weekdaysArr.forEach(day => {
         const cell = document.createElement('td')
-        cell.innerText = Template.weekdaysArr[weekday]
+        cell.innerText = day
         weekdaysRow.appendChild(cell)
-      }
+      })
     }
 
-    let day = firstWeekDayInMonth > 0 ? daysLastMonth - firstWeekDayInMonth + 1 : 1
-    let isCurrentMonth = day === 1
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-    for (let week = 0; week < weeksInMonth; week++) {
+    let day = 1
+    for (let week = 0; day <= daysInMonth; week++) {
       const weekRow = document.createElement('tr')
       weekRow.className = 'weekRow'
       table.appendChild(weekRow)
 
-      for (let weekday = 0; weekday < 7; weekday++) {
+      for (let weekday = 0; weekday < 7 && day <= daysInMonth; weekday++) {
         const cell = document.createElement('td')
-        if ((!isCurrentMonth && day > daysLastMonth) || (isCurrentMonth && day > daysInMonth)) {
-          day = 1
-          isCurrentMonth = !isCurrentMonth
-        }
-        if (isCurrentMonth && isToday(new Date(year, month, day))) {
+        const date = new Date(year, month, day)
+        if (date.toDateString() === new Date().toDateString()) {
           cell.className = 'today'
-        } else if (!isCurrentMonth) {
+        } else if (date.getMonth() !== month) {
           cell.className = 'notCurrentMonth'
         }
         cell.innerText = day
@@ -140,9 +132,7 @@ class CalendarApp extends window.HTMLElement {
    * Deletes everything in the shadowRoot but the stylesheet
    */
   _clearContent () {
-    while (this.shadowRoot.children.length > 1) {
-      this.shadowRoot.lastChild.remove()
-    }
+    this.shadowRoot.innerHTML = '<link rel="stylesheet" href="' + AppPath + '/css/calendar-style.css">'
   }
 
   /**
@@ -161,12 +151,7 @@ class CalendarApp extends window.HTMLElement {
       this._currentYear = today.getUTCFullYear()
       this._currentMonth = today.getUTCMonth()
       this._clearContent()
-
-      if (view === Views.MonthView) {
-        this._renderMonthView()
-      } else if (view === Views.YearView) {
-        this._renderYearView()
-      }
+      view === Views.MonthView ? this._renderMonthView() : this._renderYearView()
     })
 
     const linkWrapper = document.createElement('div')
@@ -182,33 +167,23 @@ class CalendarApp extends window.HTMLElement {
    * @param {HTMLElement} parent
    * @param {views} view which view to use (month or year)
    */
-  _setNavigationEventListeners (parent, view) {
-    parent.addEventListener('click', e => {
-      if (e.target.nodeName === 'A') {
-        switch (e.target.id) {
-          case 'prevYear':
-            this._currentYear--
-            break
-          case 'nextYear':
-            this._currentYear++
-            break
-          case 'prevMonth':
-            this._currentMonth--
-            break
-          case 'nextMonth':
-            this._currentMonth++
-            break
-          case 'yearTitle':
-            this._renderYearView()
-            return
-          default:
-            break
-        }
+  naviListener (parent, view) {
+    const navigationEvents = {
+      prevYear: () => this._currentYear--,
+      nextYear: () => this._currentYear++,
+      prevMonth: () => this._currentMonth--,
+      nextMonth: () => this._currentMonth++,
+      yearTitle: () => this._renderYearView()
+    }
 
-        if (this._currentMonth === -1) {
+    parent.addEventListener('click', e => {
+      if (e.target.nodeName === 'A' && navigationEvents[e.target.id]) {
+        navigationEvents[e.target.id]()
+
+        if (this._currentMonth < 0) {
           this._currentMonth = 11
           this._currentYear--
-        } else if (this._currentMonth === 12) {
+        } else if (this._currentMonth > 11) {
           this._currentMonth = 0
           this._currentYear++
         }

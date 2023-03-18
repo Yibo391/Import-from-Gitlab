@@ -44,13 +44,13 @@ class ApplicationWindow extends window.HTMLElement {
     this.shadowRoot.appendChild(windowTemplate.content.cloneNode(true))
     this._appContent = this.shadowRoot.querySelector('#content')
     // this._appContent.style.visibility = 'hidden' /// -------------------------------------------------------------------------------------------------------------------
-    this._appWindow = this.shadowRoot.querySelector('#window')
+    this.appWindow = this.shadowRoot.querySelector('#window')
 
-    this._appWindow.querySelector('#titlebar').addEventListener('mousedown', e => this._moveWindow(e))
-    this._appWindow.querySelector('#titlebar').addEventListener('dblclick', () => this.toggleMaximizeWindow())
+    this.appWindow.querySelector('#titlebar').addEventListener('mousedown', e => this._moveWindow(e))
+    this.appWindow.querySelector('#titlebar').addEventListener('dblclick', () => this.toggleMaximizeWindow())
     this.shadowRoot.querySelector('#closeButton').addEventListener('click', () => this._closeWindow())
     this.shadowRoot.querySelector('#maximizeButton').addEventListener('click', () => this.toggleMaximizeWindow())
-    this._appWindow.querySelector('#resizeBars').addEventListener('mousedown', e => this._resizeWindow(e))
+    this.appWindow.querySelector('#resizeBars').addEventListener('mousedown', e => this.resizeW(e))
   }
 
   _moveWindow (e) {
@@ -90,7 +90,7 @@ class ApplicationWindow extends window.HTMLElement {
     }
   }
 
-  _resizeWindow (e) {
+  resizeW (e) {
     let resizeListener
 
     if (e.target.id === 'ne-resizer') {
@@ -108,7 +108,7 @@ class ApplicationWindow extends window.HTMLElement {
     }
     window.addEventListener('mouseup', removeResizeListeners)
 
-    const element = this._appWindow
+    const element = this.appWindow
     const startResize = (e, corners) => {
       if (this._isMaximized) {
         this._isMaximized = false
@@ -136,25 +136,25 @@ class ApplicationWindow extends window.HTMLElement {
     }
 
     if (!this._isMaximized) {
-      this._prevWindowState = { top: this._appWindow.style.top, left: this._appWindow.style.left, width: this._appWindow.style.width, height: this._appWindow.style.height }
+      this._prevWindowState = { top: this.appWindow.style.top, left: this.appWindow.style.left, width: this.appWindow.style.width, height: this.appWindow.style.height }
 
       const fillDesktop = () => {
-        this._appWindow.style.top = '0px'
-        this._appWindow.style.left = '0px'
+        this.appWindow.style.top = '0px'
+        this.appWindow.style.left = '0px'
 
-        this._appWindow.style.width = window.innerWidth + 'px'
-        this._appWindow.style.height = (window.innerHeight - 53) + 'px'
+        this.appWindow.style.width = window.innerWidth + 'px'
+        this.appWindow.style.height = (window.innerHeight - 53) + 'px'
       }
       window.onresize = () => fillDesktop()
       fillDesktop()
     } else {
       window.onresize = undefined
       if (useSavedPosition) {
-        this._appWindow.style.top = this._prevWindowState.top
-        this._appWindow.style.left = this._prevWindowState.left
+        this.appWindow.style.top = this._prevWindowState.top
+        this.appWindow.style.left = this._prevWindowState.left
       }
-      this._appWindow.style.width = this._prevWindowState.width
-      this._appWindow.style.height = this._prevWindowState.height
+      this.appWindow.style.width = this._prevWindowState.width
+      this.appWindow.style.height = this._prevWindowState.height
     }
     this._isMaximized = !this._isMaximized
   }
@@ -168,7 +168,7 @@ class ApplicationWindow extends window.HTMLElement {
     this._app = app
 
     this._appContent.appendChild(app)
-    this._appWindow.querySelector('#titlebar').querySelector('img').setAttribute('src', iconUrl)
+    this.appWindow.querySelector('#titlebar').querySelector('img').setAttribute('src', iconUrl)
   }
 
   /**
@@ -189,8 +189,8 @@ class ApplicationWindow extends window.HTMLElement {
    * @param {number} offset
    */
   setOffsetPosition (offset) {
-    this._appWindow.style.top = offset + 'px'
-    this._appWindow.style.left = offset + 'px'
+    this.appWindow.style.top = offset + 'px'
+    this.appWindow.style.left = offset + 'px'
   }
 
   /**
@@ -201,7 +201,7 @@ class ApplicationWindow extends window.HTMLElement {
   setFocus (zIndex) {
     this._app.dispatchEvent(new window.CustomEvent('windowgotfocus'))
 
-    this._appWindow.style.setProperty('z-index', zIndex)
+    this.appWindow.style.setProperty('z-index', zIndex)
     this.shadowRoot.querySelector('#titlebar').classList.add('focused')
   }
 
@@ -219,7 +219,7 @@ class ApplicationWindow extends window.HTMLElement {
    * Returns the z-index of the window
    */
   getLayer () {
-    return this._appWindow.style.getPropertyValue('z-index')
+    return this.appWindow.style.getPropertyValue('z-index')
   }
 }
 

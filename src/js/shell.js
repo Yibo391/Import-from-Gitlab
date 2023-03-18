@@ -33,7 +33,6 @@ const newWindowOffset = 10
 class PersonalWebDesktop extends window.HTMLElement {
   constructor () {
     super()
-
     this.attachShadow({ mode: 'open' })
   }
 
@@ -58,12 +57,6 @@ class PersonalWebDesktop extends window.HTMLElement {
         this.openApplication(e.target)
       }
     })
-
-    this._bottombar.addEventListener('keydown', e => {
-      if (e.target.classList.contains('icon') && e.key === 'Enter') {
-        this.openApplication(e.target)
-      }
-    })
   }
 
   _insertAppShortcuts () {
@@ -78,16 +71,6 @@ class PersonalWebDesktop extends window.HTMLElement {
     })
 
     this._highestLayer = 1
-  }
-
-  addDocumentEvenLs () {
-    document.addEventListener('keydown', e => {
-      if (e.key === 'F4' && e.shiftKey) {
-        this.closeFocusedWindow()
-      } else if (e.key === 'F11' && e.shiftKey) {
-        this.maximizeWindow()
-      }
-    })
   }
 
   /**
