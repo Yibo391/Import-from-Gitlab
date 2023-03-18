@@ -55,7 +55,7 @@
 .windowButton {
   padding: 7px 10px;
   border-left: 1px solid #555;
-  background-color: grey;
+  background-color: blue;
   box-sizing: content-box;
 }
 

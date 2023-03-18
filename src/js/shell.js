@@ -38,14 +38,13 @@ class PersonalWebDesktop extends window.HTMLElement {
   }
 
   connectedCallback () {
-    this._appendElements()
-    this._addBottombarEventListeners()
+    this.appendE()
+    this.addEvenLS()
     this._insertAppShortcuts()
-    this._addDocumentEventListeners()
-    this._addContextMenuPreventDefault()
+    this.addDocumentEvenLs()
   }
 
-  _appendElements () {
+  appendE () {
     this.shadowRoot.appendChild(stylesheet.content)
     this.shadowRoot.appendChild(desktopSnippet)
     this.shadowRoot.appendChild(bottombarSnippet)
@@ -53,7 +52,7 @@ class PersonalWebDesktop extends window.HTMLElement {
     this._bottombar = this.shadowRoot.querySelector('#bottombar')
   }
 
-  _addBottombarEventListeners () {
+  addEvenLS () {
     this._bottombar.addEventListener('click', e => {
       if (e.target.classList.contains('icon')) {
         this.openApplication(e.target)
@@ -81,19 +80,13 @@ class PersonalWebDesktop extends window.HTMLElement {
     this._highestLayer = 1
   }
 
-  _addDocumentEventListeners () {
+  addDocumentEvenLs () {
     document.addEventListener('keydown', e => {
       if (e.key === 'F4' && e.shiftKey) {
         this.closeFocusedWindow()
       } else if (e.key === 'F11' && e.shiftKey) {
         this.maximizeWindow()
       }
-    })
-  }
-
-  _addContextMenuPreventDefault () {
-    window.addEventListener('contextmenu', e => {
-      e.preventDefault()
     })
   }
 

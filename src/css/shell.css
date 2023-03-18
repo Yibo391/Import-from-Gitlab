@@ -11,11 +11,11 @@
   width: 100%;
   padding: 5px;
   border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
   border-right: none;
   border-bottom: none;
   background-color: #0078D7;
   font-family: "Segoe UI", sans-serif;
+  left: 0;
 }
 
 .icon {

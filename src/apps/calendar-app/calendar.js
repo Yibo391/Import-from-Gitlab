@@ -83,12 +83,13 @@ class CalendarApp extends window.HTMLElement {
 
   /**
    * Creates and returns a table of the month specified in the arguments
-   * @param {number} year
-   * @param {number} month
+   *
+   * @param {number} year year
+   * @param {number} month month
    * @param {boolean} fullView shows weekdays
+   * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
    */
   _makeMonth (year = this._currentYear, month = this._currentMonth, fullView = true) {
-    // calculations
     const daysLastMonth = new Date(year, month, 0).getDate()
     const daysInMonth = new Date(year, month + 1, 0).getDate()
     const firstWeekDayInMonth = new Date(year, month, 1).getUTCDay()
@@ -98,8 +99,7 @@ class CalendarApp extends window.HTMLElement {
     table.id = fullView ? 'fullView' : 'miniView'
 
     if (fullView) {
-      // prints week days headers
-      let weekdaysRow = document.createElement('tr')
+      const weekdaysRow = document.createElement('tr')
       table.appendChild(weekdaysRow)
       for (let weekday = 0; weekday < 7; weekday++) {
         const cell = document.createElement('td')
@@ -111,27 +111,20 @@ class CalendarApp extends window.HTMLElement {
     let day = firstWeekDayInMonth > 0 ? daysLastMonth - firstWeekDayInMonth + 1 : 1
     let isCurrentMonth = day === 1
 
-    // adds a row for each week in the month
     for (let week = 0; week < weeksInMonth; week++) {
-      let weekRow = document.createElement('tr')
+      const weekRow = document.createElement('tr')
       weekRow.className = 'weekRow'
       table.appendChild(weekRow)
 
-      // adds a cell for each day
       for (let weekday = 0; weekday < 7; weekday++) {
         const cell = document.createElement('td')
         if ((!isCurrentMonth && day > daysLastMonth) || (isCurrentMonth && day > daysInMonth)) {
-          // month shift
           day = 1
           isCurrentMonth = !isCurrentMonth
         }
-        if (isCurrentMonth) {
-          // marks current day
-          const date = new Date(year, month, day)
-          if (isToday(date)) {
-            cell.className = 'today'
-          }
-        } else {
+        if (isCurrentMonth && isToday(new Date(year, month, day))) {
+          cell.className = 'today'
+        } else if (!isCurrentMonth) {
           cell.className = 'notCurrentMonth'
         }
         cell.innerText = day
@@ -139,6 +132,7 @@ class CalendarApp extends window.HTMLElement {
         day++
       }
     }
+
     return table
   }
 
@@ -153,42 +147,62 @@ class CalendarApp extends window.HTMLElement {
 
   /**
    * Returns a (centered) link to get you to present day
+   *
    * @param {views} view - which view the anchor links to
+   * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
    */
   _makeTodayLink (view) {
-    const linkTemplate = Template.todayLink.content.cloneNode(true)
-    linkTemplate.querySelector('a').addEventListener('click', () => {
-      this._currentYear = new Date().getUTCFullYear()
-      this._currentMonth = new Date().getUTCMonth()
+    const link = document.createElement('a')
+    link.href = '#'
+    link.innerText = 'Today'
+
+    link.addEventListener('click', () => {
+      const today = new Date()
+      this._currentYear = today.getUTCFullYear()
+      this._currentMonth = today.getUTCMonth()
       this._clearContent()
+
       if (view === Views.MonthView) {
         this._renderMonthView()
       } else if (view === Views.YearView) {
         this._renderYearView()
       }
     })
-    return linkTemplate
+
+    const linkWrapper = document.createElement('div')
+    linkWrapper.classList.add('todayLink')
+    linkWrapper.appendChild(link)
+
+    return linkWrapper
   }
 
   /**
    * Sets listeners for navigation buttons
+   *
    * @param {HTMLElement} parent
    * @param {views} view which view to use (month or year)
    */
   _setNavigationEventListeners (parent, view) {
     parent.addEventListener('click', e => {
       if (e.target.nodeName === 'A') {
-        if (e.target.id === 'prevYear') {
-          this._currentYear--
-        } else if (e.target.id === 'nextYear') {
-          this._currentYear++
-        } else if (e.target.id === 'prevMonth') {
-          this._currentMonth--
-        } else if (e.target.id === 'nextMonth') {
-          this._currentMonth++
-        } else if (e.target.id === 'yearTitle') {
-          this._renderYearView()
-          return
+        switch (e.target.id) {
+          case 'prevYear':
+            this._currentYear--
+            break
+          case 'nextYear':
+            this._currentYear++
+            break
+          case 'prevMonth':
+            this._currentMonth--
+            break
+          case 'nextMonth':
+            this._currentMonth++
+            break
+          case 'yearTitle':
+            this._renderYearView()
+            return
+          default:
+            break
         }
 
         if (this._currentMonth === -1) {
@@ -198,6 +212,7 @@ class CalendarApp extends window.HTMLElement {
           this._currentMonth = 0
           this._currentYear++
         }
+
         if (view === Views.MonthView) {
           this._renderMonthView()
         } else if (view === Views.YearView) {
@@ -208,11 +223,16 @@ class CalendarApp extends window.HTMLElement {
   }
 }
 
+/**
+ * Determines if a given date is today's date.
+ *
+ * @param {Date} date - The date to check.
+ * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
+ */
 function isToday (date) {
-  const dateToday = new Date()
-  return dateToday.getUTCFullYear() === date.getUTCFullYear() &&
-  dateToday.getUTCMonth() === date.getUTCMonth() &&
-  dateToday.getDate() === date.getDate()
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  return date.getTime() === today.getTime()
 }
 
 window.customElements.define(AppName, CalendarApp)
