@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA/4QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREAERERABEREQEREREQABEAARAAARAAEQABEAABEAARAAEQAAEQABEAARAAARAAEQABEAABEAARAAEQAAEQABEAARAAARAAEQABEAABEAARAAEQAAEREBEAARAAAREREQABEAABEBERAAEQAAEQAREAARERERAAEQAAERERCBgQAAgQAAAOc8AADnPAAA5zwAAOc8AADnPAAA5zwAAOc8AADnPAAA5zwAACc8AAAHPAAAhzwAAMcAAADngQAA">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 10</title>
+    
+  <script type="module" crossorigin src="/assets/index-e7271bdd.js"></script>
+  <link rel="stylesheet" href="/assets/index-be819582.css">
+</head>
+
+<body>
+
+<div class="taskbar">
+    <div class="icons">
+        <div class="icons-left">
+            <a href="" id="start-menu"><i class="fab fa-windows"></i></a>
+            <a href="" id="search"></a>
+            <a href="" class="px"></a>
+            <a href="" id="folder" class="border"></a>
+            <a href="" id="chrome" class="border"></a>
+            <a href="" id="carpool" class="border"></a>
+        </div>
+        <div class="icons-right">
+                <a href="" id="sound" class="small-icons"></a>
+                <a href="" id="wifi" class="small-icons"></a>
+                <div class="datetime">
+                    <span id="hourOfStartup" class="hour">
+                    </span>
+                    <span id="dateOfStartup" class="date">
+                    </span>
+                </div>
+                <a href="" class="clear disabled"></a>
+                <a href="" id="return"></a>
+        </div>
+    </div>
+</div>
+
+<div id = "container" class="desktop">
+        <ul>
+            <li id="chatApp" class="icon-desktop" ><img src="/assets/messenger-5874cd38.png"/><span>Chat</span></li>
+            <li class="icon-desktop" id = "memoryApp"><img src="data:image/png;base64,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" /><span>Memory</span></li>
+            <li class="icon-desktop" id = "quizApp"><img src="/assets/quiz-6c103ccc.png"/><span>Quiz</span></li>
+            <li class="icon-desktop" id = "calculatorApp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABU0lEQVR4nO2YPU7DQBCFfQlyAxrKFJFc0G1BqhTQrBSFigIkaFFukGruwSUi+QS5gWs36VKleYgiUoAQpbD3h/1Get1aXn8e77znqqIur/r2TgfNn5dJ6Xhv1VBVH93kfvEW/aEPenh8DQ+gTlgAGKq8tcpBABiqfAJvN/sOWD3dfG3wpN79tbSendV0Mvp2TXYAtJ71CiFLAOoRQrYA1AMEN77KD4Av/RD0AGj/VwfUCXh/AFjEDpgn8A8AAEYHiE/AOAPEIWg4QWGFjSygoEbIlwzAvXxou9ufVIw1UQA0m+6Xfm481BoAGB2g4J+A+0Mx1mCEDCMkxqAxBhX0EGzwAV3ZRsgxBtvo4QcfYKRBEYaMNCjSoDEGFdQH+EQFgJBOcMtP0a7sLNAAoCu7AxxpsI0+9hiDRhoUU8AYg8IHGGNQhCEb0Ai5M8YnJQGAqi6uT4/wxYe1RaXzAAAAAElFTkSuQmCC"/><span>Calculator</span></li>
+        </ul>
+
+        <div id="allAlternatives">
+            <form class = "formContainer py dpx" id="selectedGrid">
+                <p>Please select the size of the grid for the memory game:</p>
+                <input class = "option-input radio" type="radio" id="2by2" name="choices" value="2 x 2">
+                <label for="2by2">2 x 2</label><br>
+                <input class = "option-input radio" type="radio" id="2by4" name="choices" value="2 x 4">
+                <label for="2by4">2 x 4</label><br>
+                <input class = "option-input radio" type="radio" id="4by4" name="choices" value="4 x 4">
+                <label for="4by4">4 x 4</label><br>
+            </form>
+        </div>
+
+        <template id="memory-template">
+            <div style="background-color: yellow;" id="memoryContainer">
+            </div>
+        </template>
+        <template id="memory-template-card">
+            <a href="card"><img src="./img/memory/info.png" alt="card"/></a>
+        </template>
+        
+    <div id="sound-modal">
+        <div class="sound-text">
+            <span>Speakers</span>
+        </div>
+        <div class="sound-progress">
+            <i class="fas fa-volume-up"></i>
+            <div class="bar-sound"></div>
+            <div class="bar-sound-drag"></div> 
+            <span class="data-value">50%</span>   
+        </div>
+    </div>
+
+    <div id="wifi-modal">
+            <div class="list-networks">
+                <div class="networks">
+                    <div class="icons-wifi">
+                    <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="text-wifi">
+                        <span class="name-wifi">Current network</span>
+                        <span class="type-wifi">Connected</span>
+                        <span class="propriety">Property</span>
+                        <button>Disconnect</button>
+                    </div>
+                </div>
+                <div class="networks">
+                        <div class="icons-wifi">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                    <span class="name-wifi">Wifi</span>
+                    <span class="type-wifi">Available</span>
+                </div>
+                <div class="networks">
+                        <div class="icons-wifi">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                    <span class="name-wifi">Wifi</span>
+                    <span class="type-wifi">Available</span>
+                </div>
+                <div class="options-wifi">
+                    <div class="options-bloc">
+                        <div class="bloc-options">
+                            <i class="fas fa-wifi"></i>
+                            <span>Wifi</span>
+                        </div>
+                        <div class="bloc-options">
+                            <i class="fas fa-plane"></i>
+                            <span>Airplane mode</span>
+                        </div>
+                        <div class="bloc-options">
+                            <i class="fab fa-bluetooth-b"></i>
+                            <span>Bluetooth</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="chrome" id="chrome-pop-up">
+    <div class="pop-up">
+
+        <div class="chrome-top">
+            <div class="chrome-tabs">
+                <div class="triangle"></div>
+                <div class="tabs">
+                    <span class="icons-tabs">
+                        <i class="fab fa-codepen"></i>
+                    </span>
+                    <span class="text-tabs">Home</span>
+                    <span class="close-tabs">x</span>
+                </div>
+                <div class="triangle-2"></div>
+                <div class="new-tabs"></div>
+            </div>
+            <div class="chrome-close">
+                <a href=""><i class="fas fa-minus"></i></a>
+                <a href=""><i class="far fa-window-restore"></i></a>
+                <a href=""><i class="fas fa-times"></i></a>
+            </div>
+        </div>
+        <!-- Bottom -->
+        <div class="chrome-bottom">
+            <div class="options-bar">
+                <div class="icons-bar">
+                    <div class="arrows">
+                        <a href=""><i class="fas fa-arrow-left"></i></a>
+                        <a href=""><i class="fas fa-arrow-right"></i></a>
+                        <a href=""><i class="fas fa-sync"></i></a>
+                    </div>
+                    <div class="search-bar">
+                        <span class="info"><i class="fas fa-lock"></i>Secured</span>
+                        <input type="text" value="http://google.com">
+                        <span class="star"><i class="far fa-star"></i></span>
+                    </div>
+                    <div class="points-bar">
+                        <div class="points">
+                            <span>•</span>
+                            <span>•</span>
+                            <span>•</span>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <iframe src="http://google.com" frameborder="0" width="895px" height="404px"></iframe>
+    </div> 
+</div>
+
+<!-- Start menu -->
+<div id="start-menu-modal">
+    <div id="user">
+        <a class="push" href=""><i class="fas fa-bars"></i></a>
+        <a href=""><i class="fas fa-user"></i></a>
+        <a href=""><i class="fas fa-cog"></i></a>
+        <a href=""><i class="fas fa-power-off"></i></a>
+    </div>
+    <div id="others">
+    </div>
+</div>
+ 
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.3.slim.min.js">
+var capture = $( ".capture" )
+			.attr( "tabindex", "-1" )
+			.focus()
+			.keydown(
+				function handleKeydown( event ) {
+					if ( event.key.toLowerCase() !== "tab" ) {
+						return;
+					}
+					var tabbable = $()
+						.add( capture.find( "[href]" ) )
+						.add( capture.find( "[tabindex]:not([tabindex='-1'])" ) )
+					;
+					var target = $( event.target );
+
+					if ( event.shiftKey ) {
+						if ( target.is( capture ) || target.is( tabbable.first() ) ) {
+							event.preventDefault();
+							tabbable.last().focus();
+						}
+					} else {
+						if ( target.is( tabbable.last() ) ) {
+							event.preventDefault();
+							tabbable.first().focus();
+						}
+					}
+				}
+			)
+		;
+</script>
+</body>
+</html>

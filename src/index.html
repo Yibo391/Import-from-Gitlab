@@ -1,26 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>My Web Page</title>
-    <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows 10</title>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <div id="screen">
-        <div id="app-container"></div>
-        <div id="dock">
-            <div class="app" data-app-id="app1">App 1</div>
-            <div class="app" data-app-id="app2">App 2</div>
-            <div class="app" data-app-id="app3">App 3</div>
 
-            <div id="time">
-                <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
-            </div>
+  <div class="taskbar">
+    <div class="icons">
+      <div class="icons-left">
+        <a href="#" disabled id="start-menu"><i class="fab fa-windows"></i></a>
+
+      </div>
+      <div class="icons-right">
+
+        <div class="datetime">
+          <span id="hourOfStartup" class="hour">
+          </span>
+          <span id="dateOfStartup" class="date">
+          </span>
         </div>
-    </div>
-</body>
-<script type="module" src="./js/main.js"></script>
 
+      </div>
+    </div>
+  </div>
+
+  <div id="container" class="desktop">
+    <ul>
+      <li id="chatApp" class="icon-desktop"><img src="./img/desktop/messenger.png" /><span>Chat</span></li>
+      <li class="icon-desktop" id="memoryApp"><img src="./img/desktop/memory.png" /><span>Memory</span></li>
+      <li class="icon-desktop" id="quizApp"><img src="./img/desktop/quiz.png" /><span>Quiz</span></li>
+      <li class="icon-desktop" id="calculatorApp"><img src="./img/desktop/calculator.png" /><span>Calculator</span></li>
+    </ul>
+
+    <div id="allAlternatives">
+      <form class="formContainer py dpx" id="selectedGrid">
+        <p>Please select the size of the grid for the memory game:</p>
+        <input class="option-input radio" type="radio" id="2by2" name="choices" value="2 x 2">
+        <label for="2by2">2 x 2</label><br>
+        <input class="option-input radio" type="radio" id="2by4" name="choices" value="2 x 4">
+        <label for="2by4">2 x 4</label><br>
+        <input class="option-input radio" type="radio" id="4by4" name="choices" value="4 x 4">
+        <label for="4by4">4 x 4</label><br>
+      </form>
+    </div>
+
+    <template id="memory-template">
+      <div style="background-color: yellow;" id="memoryContainer">
+      </div>
+    </template>
+    <template id="memory-template-card">
+      <a href="card"><img src="./img/memory/info.png" alt="card" /></a>
+    </template>
+
+
+  </div>
+
+
+  <script type="module" src="./js/script.js"></script>
+</body>
 
 </html>

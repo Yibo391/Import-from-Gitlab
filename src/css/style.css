@@ -1,85 +1,310 @@
-#screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 50px;
-  height: 100%;
-  background-image: url(/img/computer_kuan_201782_18.jpeg);
+* {
+  box-sizing: border-box
 }
 
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0
+}
 
-#dock {
-  position: fixed;
+body {
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  font-family: Arial, Helvetica, sans-serif
+}
+
+.desktop {
+  height: 100vh;
+  background: url(../img/desktop/BlissBackground.jpg);
+  background-position: center;
+  background-size: cover
+}
+
+.formContainer {
+  background-image: url(../img/memory/quiz-background-opac.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #fff;
+  outline: 2px solid #00f;
+  color: #00008b;
+  display: block;
+  position: relative;
+  margin: 40px auto;
+  height: 360px;
+  width: 500px;
+  padding: 20px;
+  align-items: center
+}
+
+.dpx {
+  display: flex;
+  align-items: center;
+  justify-content: space-around
+}
+
+label {
+  display: block;
+  line-height: 40px
+}
+
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  display: flex;
-  height: 50px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  height: 40px;
+  width: 40px;
+  transition: all .15s ease-out 0s;
+  background: #cbd1d8;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: .5rem;
+  outline: 0;
+  z-index: 1000
 }
 
-.app {
+.option-input:hover {
+  background: #9faab7
+}
+
+.option-input:checked {
+  background: #40e0d0
+}
+
+.option-input:checked::before {
+  width: 40px;
+  height: 40px;
   display: flex;
+  content: "\f00c";
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  background-color: white;
-  border-radius: 4px;
+  font-family: "Font Awesome 5 Free"
+}
+
+.option-input:checked::after {
+  -webkit-animation: click-wave .65s;
+  -moz-animation: click-wave .65s;
+  animation: click-wave .65s;
+  background: #40e0d0;
+  content: "";
+  display: block;
+  position: relative;
+  z-index: 100
+}
+
+.option-input.radio {
+  border-radius: 50%
+}
+
+.option-input.radio::after {
+  border-radius: 50%
+}
+
+@keyframes click-wave {
+  0% {
+    height: 40px;
+    width: 40px;
+    opacity: .35;
+    position: relative
+  }
+
+  100% {
+    height: 200px;
+    width: 200px;
+    margin-left: -80px;
+    margin-top: -80px;
+    opacity: 0
+  }
+}
+
+.desktop {
+  display: flex
+}
+
+.desktop .icon-desktop {
+  padding: 4px 8px;
+  border: 2px solid transparent;
+  text-align: center;
+  margin-bottom: 32px
+}
+
+.desktop .icon-desktop a {
+  display: block;
+  text-decoration: none;
+  cursor: default
+}
+
+.desktop .icon-desktop img {
+  height: 48px;
+  width: 48px
+}
+
+.desktop .icon-desktop span {
+  display: block;
+  color: #fff;
+  font-size: 11px;
+  text-align: center
+}
+
+.desktop .icon-desktop:hover {
+  background: rgba(255, 255, 255, .1);
+  border: 2px solid rgba(255, 255, 255, .2)
+}
+
+.desktop .icon-desktop:first-child {
+  margin-top: 5px
+}
+
+@keyframes open-height {
+  0% {
+    height: 50px;
+    opacity: .5
+  }
+
+  100% {
+    height: 100px;
+    opacity: 1
+  }
+}
+
+span:not(:first-child) {
+  font-size: 12px;
+  cursor: default
+}
+
+@keyframes open {
+  0% {
+    height: 550px;
+    opacity: .5
+  }
+
+  100% {
+    height: 600px;
+    opacity: 1
+  }
+}
+
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  height: 43px;
+  width: 100%;
+  background: #004172
+}
+
+.taskbar .icons-left {
+  height: 43px;
+  display: inline-block
+}
+
+.taskbar .icons-left #start-menu {
+  height: 43px;
+  width: 48px;
+  position: relative
+}
+
+.taskbar .icons-left #start-menu {
+  height: 43px;
+  width: 48px;
+  background-image: url(../img/taskbar-left/windows.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 32px 32px
+}
+
+.taskbar .icons-left #start-menu i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 21px;
+  color: #fff
+}
+
+.taskbar .icons-left a {
+  display: table-cell;
+  border-bottom: 2px solid transparent
+}
+
+.taskbar .icons-left a:hover {
+  background-color: rgba(255, 255, 255, .1) !important
+}
+
+.taskbar .icons-left a:not(:first-child) {
+  margin-left: -4px
+}
+
+.taskbar .icons-right {
+  height: 43px;
+  float: right
+}
+
+.taskbar .icons-right .disabled {
+  pointer-events: none;
+  cursor: default
+}
+
+.taskbar .icons-right .datetime {
+  display: table-cell;
+  width: 70px !important;
   cursor: pointer;
-  transition: background-color 0.1s;
+  padding-top: 3px
 }
 
-.app:hover {
-  background-color: rgba(0, 0, 0, 0.3);
+.taskbar .icons-right .datetime span {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+  font-size: 11.3px;
+  color: #fff
 }
 
-#time {
-  position: absolute;
-  right: 0px;;
-  bottom: 10px;
+.taskbar .icons-right .datetime:hover {
+  background-color: rgba(255, 255, 255, .1) !important
 }
 
-.screen-app {
-    background-color: aqua;
+.taskbar .icons-right a {
+  display: table-cell
 }
 
-.window {
-  position: absolute;
-  top: 50px;
-  left: 50px;
+.taskbar .icons-right a:hover {
+  background-color: rgba(255, 255, 255, .1) !important
+}
+
+.taskbar .icons-right a:not(:first-child) {
+  margin-left: -4px
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0)
+  }
+
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+
+
+
+.app-sub-window {
   width: 400px;
-  height: 300px;
-  background-color: white;
-  border: 1px solid #ccc;
-}
-
-.window .title-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 30px;
-  background-color: #eee;
-  border-bottom: 1px solid #ccc;
-}
-
-.window .title-bar button {
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  border: 0;
-  font-size: 16px;
-  font-weight: bold;
-  color: #444;
-  cursor: pointer;
-}
-
-.window .title-bar button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.selected {
-  z-index: 1;
+  height: 500px;
+  position: absolute;
+  background-color: hsl(207, 90%, 54%);
 }
