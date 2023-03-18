@@ -1,0 +1,16 @@
+.card {
+  width: 100%;
+}
+
+.selectedCard {
+  border: 2px solid red;
+}
+
+table.cards {
+  /* width: 100%;
+  table-layout : fixed; */
+}
+
+.right {
+  float: right;
+}

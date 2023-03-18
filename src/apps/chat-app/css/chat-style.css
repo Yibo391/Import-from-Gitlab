@@ -1,0 +1,146 @@
+/* LAYOUT WRAPPER */
+#layout {
+  display: flex;
+  /* border: 3px solid orange; */
+  height: 100%;
+  width: 100%;
+}
+
+
+/* CHANNELS */
+#channels {
+  max-height: calc(100% - 70px);
+  line-height: 22px;
+  min-width: 120px;
+  max-width: 120px;
+  padding: 10px;
+  border-right: 1px solid black;
+  /* border: 2px solid blue; */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#channels a {
+  display: block;
+  color: black;
+  text-decoration: none;
+}
+
+#channels a:hover {
+  background-color: #eee;
+}
+
+#channels button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+#channels button:hover, #channels .delete:hover {
+  transform: scale(1.5);
+}
+
+#channels input {
+  width: calc(100% - 10px)
+}
+
+#customChannels {
+  font-style: italic;
+  white-space: nowrap;
+}
+
+#customChannels .delete {
+  float: right;
+  cursor: pointer;
+  font-style: normal;
+  font-family: sans-serif;
+}
+
+.selectedChannel {
+  font-weight: bold;
+}
+
+
+/* CHAT MESSAGE BOX */
+#chatMessageBox {
+  flex: 1;
+  padding: 10px;
+  /* border: 2px solid green; */
+  max-height: calc(100% - 70px);
+
+  overflow: auto;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+
+  user-select: text;
+  cursor: text;
+}
+
+/* USER INPUTS (BOTTOM PART) */
+#userInputs {
+  position: absolute;
+  width: calc(100% - 90px);
+  bottom: 5px;
+  white-space: nowrap
+  /* border: 2px dotted violet; */
+}
+
+#notification {
+  position: absolute;
+  border: 1px solid black;
+  width: calc(100% - 30px);
+  padding: 2px 50px;
+  bottom: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #CCC;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#chatForm {
+  display: none;
+}
+
+fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+#userInputs textarea {
+  width: 100%;
+  resize: none;
+}
+
+#userInputs button {
+  vertical-align: top;
+  padding: 8px 12px;
+}
+
+.sender {
+  font-weight: bold;
+}
+
+.disabled {
+  background-color: #eee;
+  color: rgba(0,0,0,0.5);
+}
+
+
+/* STYLING */
+.msg {
+  /* border: 1px solid blue; */
+  width: 100%;
+}
+
+.emptyLine {
+  background-color: rgba(200, 0, 0, 0.205);
+  min-height: 2px;
+  margin: 0;
+}
+
+.time {
+  color: #aaa;
+}

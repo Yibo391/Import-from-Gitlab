@@ -1,0 +1,114 @@
+* {
+  white-space: nowrap;
+
+}
+
+.flexContainer {
+  /* border: 3px dashed red; */
+  display: flex;
+  align-self: center;
+  flex-wrap: wrap;
+}
+
+.miniMonth {
+  border: 1px outset grey;
+  width: 130px;
+  font-size: 14px;
+  text-align: left;
+  margin: 4px;
+}
+
+.miniMonth #monthName {
+  text-indent: 5px;
+}
+
+#monthNav {
+  width: 100%;
+  background-color: #c55;
+  font-size: 24px;
+  color: white;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#yearNav {
+  text-align: center;
+  /* border: 1px solid blue; */
+}
+
+.middle, #monthTitle {
+  display: inline-block;
+  width: calc(100% - 75px);
+}
+
+#month {
+  font-size: 80%;
+}
+
+a {
+  text-decoration: none;
+}
+
+#monthNav a {
+  color: white;
+}
+
+table {
+  width: 100%;
+}
+
+table#fullView {
+  table-layout: fixed;
+  border: 1px solid grey;
+}
+
+#fullView .weekRow {
+  height: 55px;
+  font-size: 14px;
+  text-align: left;
+}
+
+#miniView .weekRow {
+  height: 15px;
+  font-size: 10px;
+  text-align: center;
+}
+
+#fullView .weekRow td {
+  padding: 5px;
+  border: 1px solid grey;
+}
+
+#miniView .weekRow td {
+  padding: 2px;
+}
+
+td {
+  overflow: hidden;
+}
+
+#fullView td.notCurrentMonth {
+  background-color: #eee;
+  color: #aaa;
+}
+
+#miniView td.notCurrentMonth {
+  color: white;
+} 
+
+td.today {
+  color: rgb(240, 50, 50);
+  border: 1px solid rgb(240, 50, 50);
+  background-color: rgba(240, 50, 50, .1);
+  font-size: 150%;
+}
+
+#miniView .today {
+  border-radius: 5px;
+}
+
+#todayLink {
+  width: 100%;
+  text-align: center;
+}
