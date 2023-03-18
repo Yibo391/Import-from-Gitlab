@@ -1,0 +1,21 @@
+{
+  "name": "websocket-connect",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "Demo to connect websocket client to server.",
+  "main": "null",
+  "scripts": {
+    "test": "null",
+    "start": "node server-communication.js",
+    "clean": "rm -rf node_modules package-lock.json"
+  },
+  "keywords": [
+    "websocket"
+  ],
+  "author": "Yibo Wang",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.5.9"
+  }
+}
