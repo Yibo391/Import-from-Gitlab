@@ -289,7 +289,7 @@ class MemoryGame extends window.HTMLElement {
     card.id = id
     card.classList.add('card')
     card.setAttribute('src', imagePath)
-    this.setCardEnabe(card, true)
+    this.setEnable(card, true)
 
     return card
   }
@@ -307,7 +307,7 @@ class MemoryGame extends window.HTMLElement {
   discardCard (card) {
     const image = `${imageFolder}/empty.png`
     card.setAttribute('src', image)
-    this.setCardEnabe(card, false)
+    this.setEnable(card, false)
   }
 
   /**
@@ -316,7 +316,7 @@ class MemoryGame extends window.HTMLElement {
    * @param {*} card
    * @param {boolean} enabled
    */
-  setCardEnabe (card, enabled) {
+  setEnable (card, enabled) {
     card.setAttribute('data-enabled', enabled)
   }
 }
