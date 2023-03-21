@@ -6,7 +6,7 @@
   "main": "null",
   "scripts": {
     "test": "null",
-    "start": "node server-communication.js",
+    "start": "node server.js",
     "clean": "rm -rf node_modules package-lock.json"
   },
   "keywords": [

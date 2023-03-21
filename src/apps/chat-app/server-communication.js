@@ -1,5 +1,5 @@
-const address = 'ws://vhost3.lnu.se:20080/socket/'
-const apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+const address = 'ws://localhost:8080/'
+const apiKey = ''
 const normalDisconnectCode = 1000
 
 /**
@@ -26,6 +26,7 @@ export default class ServerConnection {
   /**
    * Tells whether this was an expected disconnect or not (user disconnected with the disconnect() method)
    * Use this in the close listener
+   *
    * @param {Event} event
    */
   wasExpectedDisconnect (event) {
@@ -48,15 +49,17 @@ export default class ServerConnection {
 
   /**
    * Sends specified msg to the server using specified channel
+   *
    * @param {string} msg
+   * @param channel
    */
   sendMessage (msg, channel) {
     const parceledMsg = {
-      'type': 'message',
-      'data': msg,
-      'username': this._userName,
-      'channel': channel,
-      'key': apiKey
+      type: 'message',
+      data: msg,
+      username: this._userName,
+      channel,
+      key: apiKey
     }
 
     this.socket.send(JSON.stringify(parceledMsg))

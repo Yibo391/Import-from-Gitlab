@@ -88,6 +88,8 @@ class ChatApp extends window.HTMLElement {
       }
     })
 
+    console.log(this._chatInput)
+
     const channels = this.shadowRoot.querySelector('#channels')
     this._reservedChannels = []
     for (const channel of channels.querySelectorAll('a')) {
