@@ -298,8 +298,13 @@ class ChatApp extends window.HTMLElement {
     if (this._currentChannel === channelId) {
       this._setChannel(allChannel)
     }
-    this._customChatChannels = this._customChatChannels.filter(channel => channel !== channelId)
-    window.localStorage.setItem(channelkey, JSON.stringify(this._customChatChannels))
+
+    const channelIndex = this._customChatChannels.findIndex(channel => channel === channelId)
+    if (channelIndex !== -1) {
+      this._customChatChannels.splice(channelIndex, 1)
+      window.localStorage.setItem(channelkey, JSON.stringify(this._customChatChannels))
+      this._renderChannels()
+    }
   }
 
   /**
@@ -324,17 +329,22 @@ class ChatApp extends window.HTMLElement {
    * @param isConnected
    */
   _connectionChangedState (isConnected) {
-    this._chatForm.querySelector('button[type="submit"]').disabled = !isConnected
+    const submitButton = this._chatForm.querySelector('button[type="submit"]')
+    submitButton.disabled = !isConnected
+    const layout = this.shadowRoot.querySelector('#layout')
+    const notification = this._notification
+    const chatForm = this._chatForm
+
     if (isConnected) {
-      this.shadowRoot.querySelector('#layout').classList.remove('disabled')
+      layout.classList.remove('disabled')
       this._chatInput.focus()
-      this._notification.style.display = 'none'
-      this._chatForm.style.display = 'block'
+      notification.style.display = 'none'
+      chatForm.style.display = 'block'
     } else {
-      this.shadowRoot.querySelector('#layout').classList.add('disabled')
-      this._notification.style.display = 'block'
-      this._chatForm.style.display = 'none'
-      this._notification.innerHTML = 'No connection to server<br>you are now viewing cached messages...'
+      layout.classList.add('disabled')
+      notification.style.display = 'block'
+      chatForm.style.display = 'none'
+      notification.innerHTML = 'No connection to server<br>you are now viewing cached messages...'
     }
   }
 
@@ -378,13 +388,7 @@ class ChatApp extends window.HTMLElement {
    * Scrolls window to bottom
    */
   _scrollToLastLine () {
-    console.log(this._chatMessageBox)
-    this._chatMessageBox.scrollTop = this._chatMessageBox.scrollHeight
-  }
-
-  // not used
-  _scrollToMsg (msg) {
-    msg.scrollIntoView({ block: 'nearest', inline: 'start' })
+    this._chatMessageBox.scrollTo({ top: this._chatMessageBox.scrollHeight, behavior: 'smooth' })
   }
 }
 
