@@ -1,15 +1,17 @@
 const address = 'ws://localhost:8080/'
-const apiKey = ''
 const normalDisconnectCode = 1000
-
 /**
- * Simple class that handles the connection with the chat server
- * Calling the constructor attempts to open up a new connection
- * The user can add event listeners to 'open' (connection established), 'close' (connection broken), and 'message' (data received) on the socket variable
+ * Represents a WebSocket connection to a server.
+ *
+ * @class
+ * @param {string} userName - The username of the client connecting to the server.
  */
 export default class ServerConnection {
   /**
-   * @param {string} userName
+   * Creates a new instance of ServerConnection class.
+   *
+   * @class
+   * @param {string} userName - The username of the client connecting to the server.
    */
   constructor (userName) {
     this._userName = userName
@@ -17,49 +19,58 @@ export default class ServerConnection {
   }
 
   /**
-   * Closes the websocket connection with a normal code
+   * Closes the WebSocket connection to the server.
+   *
+   * @function
    */
   disconnect () {
     this.socket.close(normalDisconnectCode)
   }
 
   /**
-   * Tells whether this was an expected disconnect or not (user disconnected with the disconnect() method)
-   * Use this in the close listener
+   * Checks whether the WebSocket connection was closed as expected or not.
    *
-   * @param {Event} event
+   * @function
+   * @param {Event} event - The WebSocket close event.
+   * @returns {boolean} - True if the connection was closed as expected, false otherwise.
    */
   wasExpectedDisconnect (event) {
     return event.code === normalDisconnectCode
   }
 
   /**
-   * Tells whether there is an active connection to the server or not
+   * Checks whether the WebSocket connection to the server is open.
+   *
+   * @function
+   * @returns {boolean} - True if the WebSocket connection is open, false otherwise.
    */
   isConnected () {
     return this.socket.readyState === window.WebSocket.OPEN
   }
 
   /**
-   * Tells whether there is an active connection to the server or not
+   * Checks whether the WebSocket connection to the server is closed.
+   *
+   * @function
+   * @returns {boolean} - True if the WebSocket connection is closed, false otherwise.
    */
   isDisconnected () {
     return this.socket.readyState === window.WebSocket.CLOSED
   }
 
   /**
-   * Sends specified msg to the server using specified channel
+   * Sends a message to the server through the WebSocket connection.
    *
-   * @param {string} msg
-   * @param channel
+   * @function
+   * @param {string} msg - The message to send.
+   * @param {string} channel - The channel to send the message to.
    */
   sendMessage (msg, channel) {
     const parceledMsg = {
       type: 'message',
       data: msg,
       username: this._userName,
-      channel,
-      key: apiKey
+      channel
     }
 
     this.socket.send(JSON.stringify(parceledMsg))

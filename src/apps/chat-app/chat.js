@@ -1,13 +1,12 @@
 import * as Template from './chat-templates.js'
 import ServerConnection from './server-communication.js'
 
-const WebstorageUsernameKey = 'ee222yb.chatApp.username'
-const WebstorageChatHistoryKey = 'ee222yb.chatApp.chatHistory'
-const WebstorageCustomChatChannels = 'ee222yb.chatApp.customChatChannels'
+const userkey = 'wang'
+const historykey = 'yi'
+const channelkey = 'bo'
 
-const SaveData = true
-const UniversalChannel = 'all'
-const ReconnectInterval = 5000 // how often the app checks for server connection after the connection has been lost
+const allChannel = 'all'
+const time = 5000 // how often the app checks for server connection after the connection has been lost
 
 const AppName = 'chat-app'
 const AppPath = 'apps/' + AppName
@@ -32,15 +31,15 @@ class ChatApp extends window.HTMLElement {
   }
 
   connectedCallback () {
-    const chatHistory = JSON.parse(window.localStorage.getItem(WebstorageChatHistoryKey))
+    const chatHistory = JSON.parse(window.localStorage.getItem(historykey))
     if (chatHistory) {
       chatHistory.push({ empty: true })
     }
     this._chatPosts = chatHistory || []
 
-    this._customChatChannels = JSON.parse(window.localStorage.getItem(WebstorageCustomChatChannels)) || []
+    this._customChatChannels = JSON.parse(window.localStorage.getItem(channelkey)) || []
 
-    this._username = window.localStorage.getItem(WebstorageUsernameKey)
+    this._username = window.localStorage.getItem(userkey)
     if (this._username) {
       this._renderMainLayout()
     } else {
@@ -56,16 +55,23 @@ class ChatApp extends window.HTMLElement {
    * Renders the user name select layout
    */
   _renderUsernameSelectLayout () {
-    this.shadowRoot.appendChild(Template.pickUsernameTemplate.content.cloneNode(true))
-    const usernameForm = this.shadowRoot.querySelector('#usernameForm')
+    const div = document.createElement('div')
+    div.innerHTML = `
+    <form id="usernameForm">
+      <label for="username">Choose a username:</label>
+      <input type="text" id="username" required>
+      <button type="submit">Enter chat</button>
+    </form>
+  `
+    const usernameForm = div.querySelector('#usernameForm')
     usernameForm.addEventListener('submit', e => {
       e.preventDefault()
       this._username = usernameForm.querySelector('#username').value
-      window.localStorage.setItem(WebstorageUsernameKey, this._username)
-      this.shadowRoot.removeChild(usernameForm)
+      window.localStorage.setItem(userkey, this._username)
+      this.shadowRoot.removeChild(div)
       this._renderMainLayout()
-      usernameForm.remove()
     })
+    this.shadowRoot.appendChild(div)
   }
 
   /**
@@ -99,7 +105,7 @@ class ChatApp extends window.HTMLElement {
     const customChannels = channels.querySelector('#customChannels')
     this._renderChannels()
     this._connectToServer()
-    this._setChannel(UniversalChannel)
+    this._setChannel(allChannel)
 
     channels.addEventListener('click', e => {
       if (e.target.nodeName === 'A') {
@@ -126,16 +132,15 @@ class ChatApp extends window.HTMLElement {
 
   _renderChannels () {
     const customChannels = this.shadowRoot.querySelector('#customChannels')
-    while (customChannels.lastChild) {
-      customChannels.lastChild.remove()
-    }
-
-    for (let customChannel of this._customChatChannels) {
-      customChannels.appendChild(Template.channelLinkTemplate.content.cloneNode(true))
-      const newChannel = customChannels.lastElementChild
-      newChannel.id = customChannel
-      newChannel.appendChild(document.createTextNode('# ' + customChannel))
-      newChannel.lastElementChild.id = customChannel
+    customChannels.innerHTML = ''
+    for (const customChannel of this._customChatChannels) {
+      const channelLinkTemplate = `
+            <a id="${customChannel}">
+                # ${customChannel}
+                <button class="delete" id="${customChannel}">x</button>
+            </a>
+        `
+      customChannels.insertAdjacentHTML('beforeend', channelLinkTemplate)
     }
     if (this._currentChannel) {
       this._markChannel(this._currentChannel)
@@ -151,6 +156,8 @@ class ChatApp extends window.HTMLElement {
 
     this._serverConnection.socket.addEventListener('open', () => {
       // connection established
+      console.log('WebSocket connection established.') // Add this line
+
       this._connectionChangedState(true)
       if (this._activeReconnectInterval && this._serverConnection.isConnected()) {
         // stopping reconnect attempts
@@ -161,6 +168,8 @@ class ChatApp extends window.HTMLElement {
     // Attempt to reconnect within an interval
     this._serverConnection.socket.addEventListener('close', this._listener = e => {
       // connection lost
+      console.log('WebSocket connection closed.') // Add this line
+
       this._connectionChangedState(false)
 
       // makes not sure not to start reconnecting if the disconnect was expected, and to not set multiple reconnect intervals
@@ -173,26 +182,32 @@ class ChatApp extends window.HTMLElement {
         if (this._serverConnection.isDisconnected()) {
           this._connectToServer()
         }
-      }, ReconnectInterval)
+      }, time)
     })
 
-    this._serverConnection.socket.addEventListener('message', e => this._receiveMessage(e))
+    this._serverConnection.socket.addEventListener('message', e => {
+      console.log('Message event listener triggered.') // Add this line
+      this._receiveMessage(e)
+    })
   }
 
   /**
    * If event contains message data, stores it in localstorage and renders it on screen (if you're in the appropriate channel)
+   *
    * @param {Event} event
    */
   _receiveMessage (event) {
-    const response = JSON.parse(event.data)
-    if (response.type === 'message') {
-      if (SaveData) {
-        response.date = new Date()
-        this._chatPosts.push(response)
-        window.localStorage.setItem(WebstorageChatHistoryKey, JSON.stringify(this._chatPosts))
-      }
+    console.log('Received message:', event.data)
 
-      if (response.channel === this._currentChannel || this._currentChannel === UniversalChannel) {
+    const response = JSON.parse(event.data)
+    console.log(response.type)
+
+    if (response.type === 'message') {
+      response.date = new Date()
+      this._chatPosts.push(response)
+      window.localStorage.setItem(historykey, JSON.stringify(this._chatPosts))
+
+      if (!response.channel || response.channel === this._currentChannel) {
         const msg = this._createMessageLine(response)
         this._chatMessageBox.appendChild(msg)
         this._scrollToLastLine(msg)
@@ -202,19 +217,23 @@ class ChatApp extends window.HTMLElement {
 
   /**
    * Sends what is written in the textarea to the server as a message
+   *
    * @param {Event} event
    */
   _submitMessage (event) {
     event.preventDefault()
-    this._serverConnection.sendMessage(this._chatInput.value, this._currentChannel)
 
+    this._serverConnection.sendMessage(this._chatInput.value, this._currentChannel)
     this._chatInput.value = ''
     this._chatInput.focus()
+
+    this._serverConnection.socket.readyState === WebSocket.OPEN ? console.log(1) : console.log(2)
   }
 
   /**
    * Sets current channel in the application.
    * Loads messages from chat history that belongs to the channel
+   *
    * @param {string} channelId
    */
   _setChannel (channelId) {
@@ -224,7 +243,7 @@ class ChatApp extends window.HTMLElement {
     this._markChannel(channelId)
     this._currentChannel = channelId
 
-    const filteredChatPosts = channelId === UniversalChannel
+    const filteredChatPosts = channelId === allChannel
       ? this._chatPosts
       : this._chatPosts.filter(chatPost => chatPost.channel === channelId || chatPost.empty)
 
@@ -259,7 +278,7 @@ class ChatApp extends window.HTMLElement {
         // check that length is > 0, channel does not already exist
         if (newName.length > 0 && !this._reservedChannels.find(channel => channel.toLowerCase() === newName.toLowerCase()) && !this._customChatChannels.find(channel => channel.toLowerCase() === newName.toLowerCase())) {
           this._customChatChannels.push(newName)
-          window.localStorage.setItem(WebstorageCustomChatChannels, JSON.stringify(this._customChatChannels))
+          window.localStorage.setItem(channelkey, JSON.stringify(this._customChatChannels))
           this._renderChannels()
         }
       } else if (e.target.nodeName === 'INPUT' || (e.key && e.key !== 'Escape')) {
@@ -277,14 +296,16 @@ class ChatApp extends window.HTMLElement {
 
   _deleteChannel (channelId) {
     if (this._currentChannel === channelId) {
-      this._setChannel(UniversalChannel)
+      this._setChannel(allChannel)
     }
     this._customChatChannels = this._customChatChannels.filter(channel => channel !== channelId)
-    window.localStorage.setItem(WebstorageCustomChatChannels, JSON.stringify(this._customChatChannels))
+    window.localStorage.setItem(channelkey, JSON.stringify(this._customChatChannels))
   }
 
   /**
    * Marks the channel name to indicate it's selected. Unmarks the previous channel
+   *
+   * @param channelId
    */
   _markChannel (channelId) {
     const channels = this.shadowRoot.querySelector('#channels')
@@ -299,6 +320,8 @@ class ChatApp extends window.HTMLElement {
   /**
    * Changes the appearance of the chat window depending on your connection status
    * When disconnected, disables chat input with a notification, and makes window grey to indicate offline status
+   *
+   * @param isConnected
    */
   _connectionChangedState (isConnected) {
     this._chatForm.querySelector('button[type="submit"]').disabled = !isConnected
@@ -318,6 +341,7 @@ class ChatApp extends window.HTMLElement {
   /**
    * Creates a chat message line with timestamp, username, and the message
    * Creates an empty red line if the message contains no data
+   *
    * @param {*} message should contain date, data (message), and username
    */
   _createMessageLine (message) {
@@ -339,7 +363,7 @@ class ChatApp extends window.HTMLElement {
 
       const sender = document.createElement('span')
       sender.className = 'sender'
-      if (this._currentChannel === UniversalChannel) {
+      if (this._currentChannel === allChannel) {
         sender.title = message.channel ? '[' + message.channel + '] ' : 'no channel'
       }
       sender.innerText = message.username + ': '
@@ -354,6 +378,7 @@ class ChatApp extends window.HTMLElement {
    * Scrolls window to bottom
    */
   _scrollToLastLine () {
+    console.log(this._chatMessageBox)
     this._chatMessageBox.scrollTop = this._chatMessageBox.scrollHeight
   }
 

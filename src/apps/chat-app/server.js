@@ -1,31 +1,30 @@
+// Import the WebSocket library
 const WebSocket = require('ws')
 
+// Create a WebSocket server listening on port 8080
 const server = new WebSocket.Server({ port: 8080 })
 
+// A Set to store all connected WebSocket clients
+const clients = new Set()
+
+/**
+ * Event handler for new connections to the server.
+ *
+ * @param {WebSocket} socket - The WebSocket instance representing the client connection.
+ */
 server.on('connection', (socket) => {
-  console.log('Client connected')
+  clients.add(socket)
 
-  // Broadcast received messages to all connected clients
   socket.on('message', (message) => {
-    const parsedMessage = JSON.parse(message)
-    console.log(`Received message from ${parsedMessage.username}: ${parsedMessage.text}`)
-
-    const broadcastMessage = JSON.stringify({
-      type: 'message',
-      username: parsedMessage.username,
-      text: parsedMessage.text
-    })
-    console.log(parsedMessage.username)
-    server.clients.forEach((client) => {
-      if (client !== socket && client.readyState === WebSocket.OPEN) {
-        client.send(broadcastMessage)
+    // Broadcast the message to all connected clients
+    for (const client of clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message)
       }
-    })
+    }
   })
 
   socket.on('close', () => {
-    console.log('Client disconnected')
+    clients.delete(socket)
   })
 })
-
-console.log('WebSocket server is running on ws://localhost:3000')
