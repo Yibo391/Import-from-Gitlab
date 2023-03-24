@@ -57,3 +57,26 @@
   align-items: center;
   width: 200px;
 }
+
+.desktop-icon {
+  position: absolute;
+  margin: 20px;
+  opacity: 1;
+  background-color: transparent;
+  object-fit: contain;
+  padding: 0;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  /* ensure proper sizing */
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus {
+  background-color: rgba(0, 0, 255, 0.1);
+  /* light blue background on hover */
+  border: 1px solid rgba(0, 0, 255, 0.8);
+  /* blue border on hover */
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.8);
+  /* blue glow on hover */
+}

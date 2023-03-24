@@ -34,7 +34,32 @@ class PersonalWebDesktop extends window.HTMLElement {
     this.registerEventListeners()
     this.createAppShortcuts()
     this.createDateTimeDisplay()
+    this.createDesktopIcons()
   }
+  // { name: 'Folder', iconUrl: 'image/icon_calendar.png', action: this.openCalendar },
+  // { name: 'File', iconUrl: 'image/icon.png', action: this.openFile },
+  // { name: 'Calculator', iconUrl: 'image/info.png', action: this.openCalculator }
+
+createDesktopIcons() {
+  const icons = [
+    { appName: 'memory-game', titleName: 'Memory', iconUrl: appsPath + '/memory-game/icon.png' },
+    { appName: 'chat-app', titleName: 'Chat', iconUrl: appsPath + '/chat-app/icon.png' },
+    { appName: 'calendar-app', titleName: 'Calendar', iconUrl: appsPath + '/calendar-app/icon.png' }
+  ];
+
+  icons.forEach((icon, index) => {
+    const desktopIcon = iconSnippet.cloneNode(true);
+    desktopIcon.setAttribute('id', icon.appName);
+    desktopIcon.setAttribute('src', icon.iconUrl);
+    desktopIcon.setAttribute('title', icon.titleName);
+    desktopIcon.classList.add('desktop-icon');
+    desktopIcon.classList.add('desktop-icon-hover'); // Add new class for hover effect
+    desktopIcon.style.top = `${20 + (index * 100)}px`;
+    this._desktop.appendChild(desktopIcon);
+    desktopIcon.addEventListener('click', () => this.openApplication(desktopIcon));
+  });
+}
+
 
   setupElements () {
     this.shadowRoot.appendChild(stylesheet.content)
