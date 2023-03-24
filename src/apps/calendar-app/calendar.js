@@ -141,25 +141,26 @@ class CalendarApp extends window.HTMLElement {
    * @param {views} view - which view the anchor links to
    * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
    */
-  _makeTodayLink (view) {
-    const link = document.createElement('a')
-    link.href = '#'
-    link.innerText = 'Today'
+_makeTodayLink (view) {
+  const link = document.createElement('a')
+  link.href = '#'
+  link.innerText = 'Today'
 
-    link.addEventListener('click', () => {
-      const today = new Date()
-      this._currentYear = today.getUTCFullYear()
-      this._currentMonth = today.getUTCMonth()
-      this._clearContent()
-      view === Views.MonthView ? this._renderMonthView() : this._renderYearView()
-    })
+  link.addEventListener('click', () => {
+    const today = new Date()
+    this._currentYear = today.getUTCFullYear()
+    this._currentMonth = today.getUTCMonth()
+    this._clearContent()
+    this._renderYearView() // always render the year view after clicking "Today" link
+  })
 
-    const linkWrapper = document.createElement('div')
-    linkWrapper.classList.add('todayLink')
-    linkWrapper.appendChild(link)
+  const linkWrapper = document.createElement('div')
+  linkWrapper.classList.add('todayLink')
+  linkWrapper.appendChild(link)
 
-    return linkWrapper
-  }
+  return linkWrapper
+}
+
 
   /**
    * Sets listeners for navigation buttons

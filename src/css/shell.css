@@ -1,47 +1,59 @@
-* {
-  margin: 0;
-  user-select: none;
-}
-
 #bottombar {
   position: fixed;
   z-index: 100;
   bottom: 0;
-  height: 40px;
+  height: 48px;
   width: 100%;
-  padding: 5px;
+  padding: 0 10px;
   border-top: 1px solid #ccc;
   border-right: none;
   border-bottom: none;
-  background-color: #0078D7;
+  background-color: rgba(32, 32, 32, 0.8);
+  /* semi-transparent background */
   font-family: "Segoe UI", sans-serif;
   left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.2);
 }
 
 .icon {
   margin: auto 5px;
-  padding: 2px;
-  height: inherit;
-  max-width: 40px;
+  padding: 6px;
+  height: 36px;
+  max-width: 36px;
   overflow: hidden;
-  opacity: .81;
-  background-color: white;
+  opacity: .8;
+  background-color: #222;
+  /* darker background for icons */
   cursor: pointer;
   border-radius: 4px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  /* added transition for smooth hover effect */
 }
 
 .icon:hover,
 .icon:focus {
   opacity: 1;
-  animation: iconHover 0.3s forwards;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(58, 235, 255, 0.8);
+  /* neon-like glow on hover */
 }
 
-@keyframes iconHover {
-  from {
-    transform: scale(1.0, 1.0);
-  }
+#dateTimeDisplay {
+  margin-left: auto;
+  margin-right: 20px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #3aebff;
+  /* neon-like text color */
+}
 
-  to {
-    transform: scale(1.2, 1.2);
-  }
+#dateTimeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
 }

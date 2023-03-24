@@ -39,18 +39,42 @@ class ApplicationWindow extends window.HTMLElement {
     this._blockToggleMaximizeWindow = false // used because a touchpad seems to want to trigger drag when double clicking
   }
 
-  connectedCallback () {
+  _handleWindowEvent (eventType, handler) {
+    const titlebar = this.appWindow.querySelector('#titlebar')
+    const closeButton = this.shadowRoot.querySelector('#closeButton')
+    const maximizeButton = this.shadowRoot.querySelector('#maximizeButton')
+    const resizeBars = this.appWindow.querySelector('#resizeBars')
+
+    switch (eventType) {
+      case 'move':
+        titlebar.addEventListener('mousedown', handler)
+        break
+      case 'maximize':
+        titlebar.addEventListener('dblclick', handler)
+        maximizeButton.addEventListener('click', handler)
+        break
+      case 'close':
+        closeButton.addEventListener('click', handler)
+        break
+      case 'resize':
+        resizeBars.addEventListener('mousedown', handler)
+        break
+      default:
+        break
+    }
+  }
+
+  connectedCallback (
+  ) {
     this.shadowRoot.appendChild(stylesheet.content.cloneNode(true))
     this.shadowRoot.appendChild(windowTemplate.content.cloneNode(true))
     this._appContent = this.shadowRoot.querySelector('#content')
-    // this._appContent.style.visibility = 'hidden' /// -------------------------------------------------------------------------------------------------------------------
     this.appWindow = this.shadowRoot.querySelector('#window')
 
-    this.appWindow.querySelector('#titlebar').addEventListener('mousedown', e => this._moveWindow(e))
-    this.appWindow.querySelector('#titlebar').addEventListener('dblclick', () => this.toggleMaximizeWindow())
-    this.shadowRoot.querySelector('#closeButton').addEventListener('click', () => this._closeWindow())
-    this.shadowRoot.querySelector('#maximizeButton').addEventListener('click', () => this.toggleMaximizeWindow())
-    this.appWindow.querySelector('#resizeBars').addEventListener('mousedown', e => this.resizeW(e))
+    this._handleWindowEvent('move', e => this._moveWindow(e))
+    this._handleWindowEvent('maximize', () => this.toggleMaximizeWindow())
+    this._handleWindowEvent('close', () => this._closeWindow())
+    this._handleWindowEvent('resize', e => this.resizeW(e))
   }
 
   _moveWindow (e) {
@@ -127,6 +151,7 @@ class ApplicationWindow extends window.HTMLElement {
 
   /**
    * Toggles betwemaximizes window size to fill the desktop, or go back to previous position and size
+   *
    *  @param {boolean} useSavedPosition whether the previous position should be restored or not (false when toggled on dragging window)
    */
   toggleMaximizeWindow (useSavedPosition = true) {
@@ -161,6 +186,7 @@ class ApplicationWindow extends window.HTMLElement {
 
   /**
    * Sets the content of the window
+   *
    * @param {HTMLElement} app
    * @param {string} iconUrl
    */
@@ -173,6 +199,7 @@ class ApplicationWindow extends window.HTMLElement {
 
   /**
    * Sets title for the window
+   *
    * @param {string} title
    */
   setTitle (title) {
@@ -186,6 +213,7 @@ class ApplicationWindow extends window.HTMLElement {
 
   /**
    * Used to set window position top and left offset, e.g. to stack windows
+   *
    * @param {number} offset
    */
   setOffsetPosition (offset) {
@@ -196,6 +224,7 @@ class ApplicationWindow extends window.HTMLElement {
   /**
    * Used to put the window on top and mark it to indicate it's focused
    * Dispatches a custom event 'windowgotfocus' for apps that wants to use it
+   *
    * @param {number} zIndex
    */
   setFocus (zIndex) {

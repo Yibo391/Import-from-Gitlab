@@ -1,0 +1,12 @@
+.card {
+  width: 100%;
+}
+
+table.cards {
+  /* width: 100%;
+  table-layout : fixed; */
+}
+
+.right {
+  float: right;
+}

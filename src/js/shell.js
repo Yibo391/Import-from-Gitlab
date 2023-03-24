@@ -23,13 +23,6 @@ const iconName = 'icon.png'
 
 const newWindowOffset = 10
 
-/**
- * Shell application that can run other (unmodified) applications in windows
- * Apps should be added in the /apps folder and have an app.js as base class, and an icon.png
- * To add an app, import it here and use the _insertAppShortcut method in connectedCallback
- * Windows can be closed by pressing shift + F4
- * Window maximization can be toggled by pressing shift + F11
- */
 class PersonalWebDesktop extends window.HTMLElement {
   constructor () {
     super()
@@ -37,12 +30,13 @@ class PersonalWebDesktop extends window.HTMLElement {
   }
 
   connectedCallback () {
-    this.appendE()
-    this.addEvenLS()
-    this._insertAppShortcuts()
+    this.setupElements()
+    this.registerEventListeners()
+    this.createAppShortcuts()
+    this.createDateTimeDisplay()
   }
 
-  appendE () {
+  setupElements () {
     this.shadowRoot.appendChild(stylesheet.content)
     this.shadowRoot.appendChild(desktopSnippet)
     this.shadowRoot.appendChild(bottombarSnippet)
@@ -50,7 +44,7 @@ class PersonalWebDesktop extends window.HTMLElement {
     this._bottombar = this.shadowRoot.querySelector('#bottombar')
   }
 
-  addEvenLS () {
+  registerEventListeners () {
     this._bottombar.addEventListener('click', e => {
       if (e.target.classList.contains('icon')) {
         this.openApplication(e.target)
@@ -58,7 +52,23 @@ class PersonalWebDesktop extends window.HTMLElement {
     })
   }
 
-  _insertAppShortcuts () {
+  createDateTimeDisplay () {
+    this._dateTimeDisplay = document.createElement('div')
+    this._dateTimeDisplay.id = 'dateTimeDisplay'
+    this._bottombar.appendChild(this._dateTimeDisplay)
+    this.updateDateTime()
+  }
+
+  updateDateTime () {
+    const now = new Date()
+    const hours = now.getHours().toString().padStart(2, '0')
+    const minutes = now.getMinutes().toString().padStart(2, '0')
+    const date = now.toLocaleDateString()
+    this._dateTimeDisplay.textContent = `${date} ${hours}:${minutes}`
+    setTimeout(() => this.updateDateTime(), 1000 * 60 - now.getSeconds() * 1000) // Update every minute
+  }
+
+  createAppShortcuts () {
     const shortcuts = [
       { appName: 'memory-game', titleName: 'Memory' },
       { appName: 'chat-app', titleName: 'Chat' },
@@ -66,33 +76,17 @@ class PersonalWebDesktop extends window.HTMLElement {
     ]
 
     shortcuts.forEach(shortcut => {
-      this._insertAppShortcut(shortcut.appName, shortcut.titleName)
+      const icon = iconSnippet.cloneNode(true)
+      const iconUrl = appsPath + '/' + shortcut.appName + '/' + iconName
+      icon.setAttribute('id', shortcut.appName)
+      icon.setAttribute('src', iconUrl)
+      icon.setAttribute('title', shortcut.titleName)
+      this._bottombar.appendChild(icon)
     })
 
     this._highestLayer = 1
   }
 
-  /**
-   * Puts a shortcut icon in the bottombar that opens the application its tied to when clicked
-   *
-   * @param {string} appName the folder that contains the app must be named this
-   * @param {string} titleName What name to display in the title bar of the window
-   */
-  _insertAppShortcut (appName, titleName) {
-    const icon = iconSnippet.cloneNode(true)
-    const iconUrl = appsPath + '/' + appName + '/' + iconName
-    icon.setAttribute('id', appName)
-    icon.setAttribute('src', iconUrl)
-    icon.setAttribute('title', titleName)
-    this._bottombar.appendChild(icon)
-  }
-
-  /**
-   * Opens the application in a window
-   *
-   * @param {HTMLElement} shortcut the icon shortcut containing parameters for app, title, and iconUrl
-   * @param icon
-   */
   openApplication (icon) {
     const appName = icon.getAttribute('id')
     const titleName = icon.getAttribute('title')
@@ -109,9 +103,6 @@ class PersonalWebDesktop extends window.HTMLElement {
     appWindow.addEventListener('mousedown', () => this.setFocusedWindow(appWindow, true))
   }
 
-  /**
-   * Closes the window that has focus
-   */
   closeFocusedWindow () {
     if (!this._focusedWindow) {
       return
@@ -142,12 +133,6 @@ class PersonalWebDesktop extends window.HTMLElement {
     this._focusedWindow.toggleMaximizeWindow()
   }
 
-  /**
-   * Puts focus on a specific window
-   *
-   * @param {HTMLElement} appWindow
-   * @param {boolean} increaseLayer
-   */
   setFocusedWindow (appWindow, increaseLayer) {
     if (this._focusedWindow !== appWindow) {
       if (this._focusedWindow) {

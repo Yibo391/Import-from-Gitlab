@@ -1,13 +1,16 @@
 #window {
   position: absolute;
-  border: 1px solid black;
-  background: #004172;
+  border: 2px solid #8A9C3D;
+  /* machine-like border */
+  background: #2C3A32;
+  /* dark green background */
   width: 600px;
   height: 530px;
   z-index: 1;
   min-width: 150px;
   min-height: 120px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 15px rgba(138, 156, 61, 0.4);
+  /* machine-like shadow */
 }
 
 #window #titlebar {
@@ -16,19 +19,20 @@
   position: relative;
   padding: 5px 10px;
   height: 20px;
-  background-color: #0078D7;
-  color: white;
+  background-color: #1E2A20;
+  /* darker green background */
+  color: #8A9C3D;
+  /* machine-like text color */
   border-bottom: 1px solid #555;
   cursor: default;
 }
 
 #window #titlebar.focused {
-  color: white;
-  background-color: #0078D7;
+  color: #8A9C3D;
+  background-color: #1E2A20;
 }
 
 #titlebar img {
-  /* height: 15px; */
   height: 90%;
   align-items: center;
 }
@@ -38,14 +42,11 @@
   width: 100%;
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
 }
 
 #titlebar #buttons {
   position: absolute;
-  /* border-top: 1px solid black; */
   right: 0;
-  /* margin-top: -2px; */
   cursor: pointer;
   font-size: 14px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -55,12 +56,16 @@
 .windowButton {
   padding: 7px 10px;
   border-left: 1px solid #555;
-  background-color: blue;
+  background-color: #1E2A20;
+  color: #8A9C3D;
+  /* machine-like text color */
   box-sizing: content-box;
 }
 
 .windowButton:hover {
-  background-color: #aaa;
+  background-color: #8A9C3D;
+  color: #1E2A20;
+  /* text color on hover */
 }
 
 #closeButton:hover {
@@ -70,13 +75,15 @@
 #window>#content {
   height: calc(100% - 32px);
   box-sizing: border-box;
-  /* border: 2px dashed grey; */
   cursor: default;
   flex: 1;
   overflow-y: auto;
   word-wrap: break-word;
   padding: 10px;
-  background-color: white;
+  background-color: #2C3A32;
+  /* dark green background */
+  color: #8A9C3D;
+  /* machine-like text color */
 }
 
 .left {
@@ -93,7 +100,6 @@
   margin-top: -10px;
   right: 0;
   width: 6px;
-  /* background-color: green; */
   cursor: ew-resize;
 }
 
@@ -103,10 +109,8 @@
   left: 0;
   width: 100%;
   height: 6px;
-  /* background-color: red; */
   cursor: ns-resize;
 }
-
 
 #ne-resizer {
   position: absolute;
@@ -114,6 +118,5 @@
   bottom: 0;
   width: 10px;
   height: 10px;
-  /* background-color: blue; */
   cursor: nwse-resize;
 }
