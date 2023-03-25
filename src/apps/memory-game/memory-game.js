@@ -158,7 +158,9 @@ class MemoryGame extends window.HTMLElement {
   }
 
   /**
-   * gets the HTMLElement of this._selectindex
+   * Gets the HTMLElement of this._selectindex
+   *
+   * @returns {HTMLElement} - The HTMLElement of this._selectindex
    */
   getCard () {
     return this.shadowRoot.querySelector('#card' + this._selectIndex)
@@ -167,7 +169,7 @@ class MemoryGame extends window.HTMLElement {
   /**
    * Shows card if allowed
    *
-   * @param {HTMLElement} card
+   * @param {HTMLElement} card this
    */
   touchCard (card) {
     const isBlocked = this._blockAction || !card.classList.contains('card') ||
@@ -313,8 +315,8 @@ class MemoryGame extends window.HTMLElement {
   /**
    * Decides if the card can be interacted with or not
    *
-   * @param {*} card
-   * @param {boolean} enabled
+   * @param {*} card for car
+   * @param {boolean} enabled for status
    */
   setEnable (card, enabled) {
     card.setAttribute('data-enabled', enabled)

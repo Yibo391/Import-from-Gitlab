@@ -9,16 +9,13 @@
 }
 
 .miniMonth {
-  border: 1px outset #8A9C3D;
-  /* machine-like border */
+  border: 1px outset #8a9c3d; /* Machine-like border */
   width: 130px;
   font-size: 14px;
   text-align: left;
   margin: 4px;
-  background-color: #2C3A32;
-  /* dark green background */
-  color: #8A9C3D;
-  /* machine-like text color */
+  background-color: #2c3a32; /* Dark green background */
+  color: #8a9c3d; /* Machine-like text color */
 }
 
 .miniMonth #monthName {
@@ -27,11 +24,9 @@
 
 #monthNav {
   width: 100%;
-  background-color: #1E2A20;
-  /* darker green background */
+  background-color: #1e2a20; /* Darker green background */
   font-size: 24px;
-  color: #8A9C3D;
-  /* machine-like text color */
+  color: #8a9c3d; /* Machine-like text color */
   text-align: center;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -56,8 +51,7 @@ a {
 }
 
 #monthNav a {
-  color: #8A9C3D;
-  /* machine-like text color */
+  color: #8a9c3d; /* Machine-like text color */
 }
 
 table {
@@ -66,8 +60,7 @@ table {
 
 table#fullView {
   table-layout: fixed;
-  border: 1px solid #8A9C3D;
-  /* machine-like border */
+  border: 1px solid #8a9c3d; /* Machine-like border */
 }
 
 #fullView .weekRow {
@@ -84,12 +77,9 @@ table#fullView {
 
 #fullView .weekRow td {
   padding: 5px;
-  border: 1px solid #8A9C3D;
-  /* machine-like border */
-  background-color: #2C3A32;
-  /* dark green background */
-  color: #8A9C3D;
-  /* machine-like text color */
+  border: 1px solid #8a9c3d; /* Machine-like border */
+  background-color: #2c3a32; /* Dark green background */
+  color: #8a9c3d; /* Machine-like text color */
 }
 
 #miniView .weekRow td {
@@ -101,21 +91,18 @@ td {
 }
 
 #fullView td.notCurrentMonth {
-  background-color: #1E2A20;
-  /* darker green background */
-  color: #5E6B51;
-  /* lighter machine-like text color */
+  background-color: #1e2a20; /* Darker green background */
+  color: #5e6b51; /* Lighter machine-like text color */
 }
 
 #miniView td.notCurrentMonth {
-  color: #5E6B51;
-  /* lighter machine-like text color */
+  color: #5e6b51; /* Lighter machine-like text color */
 }
 
 td.today {
   color: rgb(240, 50, 50);
   border: 1px solid rgb(240, 50, 50);
-  background-color: rgba(240, 50, 50, .1);
+  background-color: rgba(240, 50, 50, 0.1);
   font-size: 150%;
 }
 

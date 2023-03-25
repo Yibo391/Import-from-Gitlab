@@ -96,7 +96,13 @@ class CalendarApp extends window.HTMLElement {
     if (fullView) {
       const weekdaysRow = document.createElement('tr')
       table.appendChild(weekdaysRow)
-      Template.weekdaysArr.forEach(day => {
+
+      // Offset the weekdays by 1 day, so that Monday becomes the first day of the week
+      const weekdaysArr = Template.weekdaysArr.slice()
+      const firstDayOfWeek = weekdaysArr.shift()
+      weekdaysArr.push(firstDayOfWeek)
+
+      weekdaysArr.forEach(day => {
         const cell = document.createElement('td')
         cell.innerText = day
         weekdaysRow.appendChild(cell)
@@ -105,13 +111,17 @@ class CalendarApp extends window.HTMLElement {
 
     const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-    let day = 1
+    // Calculate the day of the week of the first day in the month, and offset it by 1 day
+    const firstDayOfMonth = new Date(year, month, 1)
+    const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7
+    let day = 1 - firstDayOfWeek
+
     for (let week = 0; day <= daysInMonth; week++) {
       const weekRow = document.createElement('tr')
       weekRow.className = 'weekRow'
       table.appendChild(weekRow)
 
-      for (let weekday = 0; weekday < 7 && day <= daysInMonth; weekday++) {
+      for (let weekday = 0; weekday < 7; weekday++) {
         const cell = document.createElement('td')
         const date = new Date(year, month, day)
         if (date.toDateString() === new Date().toDateString()) {
@@ -119,7 +129,7 @@ class CalendarApp extends window.HTMLElement {
         } else if (date.getMonth() !== month) {
           cell.className = 'notCurrentMonth'
         }
-        cell.innerText = day
+        cell.innerText = date.getDate()
         weekRow.appendChild(cell)
         day++
       }
@@ -138,35 +148,34 @@ class CalendarApp extends window.HTMLElement {
   /**
    * Returns a (centered) link to get you to present day
    *
-   * @param {views} view - which view the anchor links to
-   * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
+   *  @param {string} view - which view the anchor links to
+   *  @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
    */
-_makeTodayLink (view) {
-  const link = document.createElement('a')
-  link.href = '#'
-  link.innerText = 'Today'
+  _makeTodayLink (view) {
+    const link = document.createElement('a')
+    link.href = '#'
+    link.innerText = 'Today'
 
-  link.addEventListener('click', () => {
-    const today = new Date()
-    this._currentYear = today.getUTCFullYear()
-    this._currentMonth = today.getUTCMonth()
-    this._clearContent()
-    this._renderYearView() // always render the year view after clicking "Today" link
-  })
+    link.addEventListener('click', () => {
+      const today = new Date()
+      this._currentYear = today.getUTCFullYear()
+      this._currentMonth = today.getUTCMonth()
+      this._clearContent()
+      this._renderYearView() // always render the year view after clicking "Today" link
+    })
 
-  const linkWrapper = document.createElement('div')
-  linkWrapper.classList.add('todayLink')
-  linkWrapper.appendChild(link)
+    const linkWrapper = document.createElement('div')
+    linkWrapper.classList.add('todayLink')
+    linkWrapper.appendChild(link)
 
-  return linkWrapper
-}
-
+    return linkWrapper
+  }
 
   /**
    * Sets listeners for navigation buttons
    *
-   * @param {HTMLElement} parent
-   * @param {views} view which view to use (month or year)
+   * @param {HTMLElement} parent - The parent element where the navigation buttons will be added.
+   * @param {string} view - Which view to use (month or year).
    */
   naviListener (parent, view) {
     const navigationEvents = {
@@ -199,16 +208,16 @@ _makeTodayLink (view) {
   }
 }
 
-/**
- * Determines if a given date is today's date.
- *
- * @param {Date} date - The date to check.
- * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
- */
-function isToday (date) {
-  const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  return date.getTime() === today.getTime()
-}
+// /**
+//  * Determines if a given date is today's date.
+//  *
+//  * @param {Date} date - The date to check.
+//  * @returns {boolean} - Returns `true` if the date is today's date, otherwise `false`.
+//  */
+// function isToday (date) {
+//   const now = new Date()
+//   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+//   return date.getTime() === today.getTime()
+// }
 
 window.customElements.define(AppName, CalendarApp)

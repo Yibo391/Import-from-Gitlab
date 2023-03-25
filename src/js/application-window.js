@@ -187,8 +187,8 @@ class ApplicationWindow extends window.HTMLElement {
   /**
    * Sets the content of the window
    *
-   * @param {HTMLElement} app
-   * @param {string} iconUrl
+   * @param {HTMLElement} app app
+   * @param {string} iconUrl url
    */
   setApplication (app, iconUrl) {
     this._app = app
@@ -200,7 +200,7 @@ class ApplicationWindow extends window.HTMLElement {
   /**
    * Sets title for the window
    *
-   * @param {string} title
+   * @param {string} title title
    */
   setTitle (title) {
     this.shadowRoot.querySelector('#title').innerText = title
@@ -214,7 +214,7 @@ class ApplicationWindow extends window.HTMLElement {
   /**
    * Used to set window position top and left offset, e.g. to stack windows
    *
-   * @param {number} offset
+   * @param {number} offset offset
    */
   setOffsetPosition (offset) {
     this.appWindow.style.top = offset + 'px'
@@ -225,7 +225,7 @@ class ApplicationWindow extends window.HTMLElement {
    * Used to put the window on top and mark it to indicate it's focused
    * Dispatches a custom event 'windowgotfocus' for apps that wants to use it
    *
-   * @param {number} zIndex
+   * @param {number} zIndex index
    */
   setFocus (zIndex) {
     this._app.dispatchEvent(new window.CustomEvent('windowgotfocus'))
@@ -245,10 +245,12 @@ class ApplicationWindow extends window.HTMLElement {
   }
 
   /**
-   * Returns the z-index of the window
+   * Gets the HTMLElement of this._selectindex
+   *
+   * @returns {HTMLElement} - The HTMLElement of this._selectindex
    */
-  getLayer () {
-    return this.appWindow.style.getPropertyValue('z-index')
+  getCard () {
+    return this.shadowRoot.querySelector('#card' + this._selectIndex)
   }
 }
 
