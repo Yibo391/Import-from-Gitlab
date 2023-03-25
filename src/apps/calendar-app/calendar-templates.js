@@ -16,6 +16,7 @@ navigation.innerHTML = `
     </span>
     <a id='nextMonth' href='#'>&#8680;</a>
   </div>
+  
 `
 
 /**
