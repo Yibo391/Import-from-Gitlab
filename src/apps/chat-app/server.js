@@ -13,9 +13,11 @@ const clients = new Set()
  * @param {WebSocket} socket - The WebSocket instance representing the client connection.
  */
 server.on('connection', (socket) => {
+  console.log('New client connected')
   clients.add(socket)
 
   socket.on('message', (message) => {
+    console.log(`Received message: ${message}`)
     // Broadcast the message to all connected clients
     for (const client of clients) {
       if (client.readyState === WebSocket.OPEN) {
@@ -25,6 +27,7 @@ server.on('connection', (socket) => {
   })
 
   socket.on('close', () => {
+    console.log('Client disconnected')
     clients.delete(socket)
   })
 })
