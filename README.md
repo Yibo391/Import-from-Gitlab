@@ -45,15 +45,24 @@ By following these steps, you can easily run the Single Page Application locally
 Functional Requirements:
 
 ✅ The PWD application should be a single page application.
+
 ✅ The user shall be able to open multiple windows (not browser windows/tabs but custom windows created using the DOM) within the application.
+
 ✅ The user shall be able to drag and move the windows inside the PWD.
+
 ✅ The user shall be able to open new windows of the desired application by clicking or double clicking an icon at the desktop.
+
 ✅ The icon used to close the window should be represented in the upper bar of the window.
+
 ✅ Windows should get focus when clicked/dragged.
+
 ✅ The window with focus shall be on top of all other windows.
+
 ✅ The following three window applications should at least be included in the desktop application:
 ✅ A memory game.
+
 ✅ A chat connected to a central chat channel using websockets.
+
 ✅ One, by you, designed and decided application (perhaps the quiz or another application).
 
 F1: To enable easy reuse and improve modularity, I have separated the window and bottom bar components of the PWD application into separate JavaScript modules. This approach allows for improved maintainability and scalability, as well as the ability to add additional functionality to the application in the future.
@@ -69,12 +78,19 @@ Overall, this modular and reusable approach to component design and functionalit
 The application shall be visually appealing.
 
 ✅ The application shall be visually appealing.
+
 ✅ The README.md should contain a short description of the application with a representative image. It should also explain how the user can start the application.
+
 ✅ A complete git commit history should be present for assessment. For this assignment, somewhere between 30 and 200 commits is normal.
+
 ✅ The code shall be organized in appropriate ES modules.
+
 ✅ All exported functions, modules, and classes should be commented using JSDoc.
+
 ✅ The code standard should be followed.
+
 ✅ The linters (HTML, CSS, JavaScript) should pass without notices when running npm run lint.
+
 ✅ Build the distribution code and verify that it works. The distribution code should be saved in dist/.
 
 I believe that my program has an appealing visual design. For the main interface and bottom taskbar, I have utilized a cyberpunk style to create a futuristic and dynamic aesthetic. The window design is also inspired by a mechanical style to emphasize the technological nature of the application.
@@ -92,7 +108,9 @@ Overall, the visual design of my program, combined with its adherence to coding 
 To meet the requirements of the Memory application in the PWD, I have implemented the following features:
 
 ✅ The user can open and play multiple memory games simultaneously.
+
 ✅ The game is accessible and can be played using only the keyboard, ensuring that users of all abilities can enjoy the game.
+
 
 ### Memory game app
 
@@ -105,10 +123,15 @@ F4: Chat Window Application
 To meet the requirements of the chat application in the PWD, I have implemented the following features:
 
 ✅ The chat application is connected to other student chat clients via the web socket-server.
+
 ✅ The user can have multiple chat applications running simultaneously, allowing for efficient communication and collaboration.
+
 ✅ When the user opens the chat application for the first time, they are prompted to enter their username. This username is stored and can be reused the next time the user opens the chat application or restarts the PWD.
+
 ✅ The user can send chat messages using a textarea, enabling efficient and effective communication with other chat participants.
+
 ✅ The user can see at least the 20 latest messages since the chat application was opened, providing context and enabling efficient collaboration.
+
 
 ![chat](/chat.png)
 
@@ -132,6 +155,7 @@ Once the server is running, you can access the chat app by opening a web browser
 
 ✅ You should add one additional window application to your PWD. It should be developed by yourself and it can for example be the Quiz application or another application you choose to develop.
 
+
 ### Calendar app
 
 ![calendar](/calendar.png)
@@ -139,6 +163,7 @@ Once the server is running, you can access the chat app by opening a web browser
 ### F6: An enhanced chat application (OPTIONAL)
 
 ✅ Ability to choose which channel to listen to.
+
 ✅ Caching message history.
 
 ### F7: Additional enhancements (OPTIONAL)
