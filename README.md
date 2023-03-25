@@ -36,7 +36,8 @@ By following these steps, you can easily run the Single Page Application locally
 
 ## Presentation
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0VDhxh4se7w" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Alt text](https://img.youtube.com/vi/0VDhxh4se7w/0.jpg)](https://www.youtube.com/watch?v=0VDhxh4se7w)
+
 
 ## Building the Production Version
 
