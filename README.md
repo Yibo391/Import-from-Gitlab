@@ -36,7 +36,6 @@ By following these steps, you can easily run the Single Page Application locally
 
 ## Presentation
 
-[![Alt text](https://img.youtube.com/vi/0VDhxh4se7w/0.jpg)](https://www.youtube.com/watch?v=0VDhxh4se7w)
 
 
 ## Building the Production Version
